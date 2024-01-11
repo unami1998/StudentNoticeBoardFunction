@@ -1,10 +1,10 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.AddRequestItemDto;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -12,18 +12,21 @@ import java.util.List;
 @Entity
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemPrice;
+    @GeneratedValue
+    @Column(name="item_id")
+    private Long id;
 
     private String itemName;
-    private String itemComment;
-
-    @OneToMany
+    private int price;
+    @ManyToOne
     @JoinColumn(name="native_student")
-    List<School> mySchool;
+    private Student student;
 
-    @OneToMany
-    @JoinColumn(name="student_pick_item")
-    private List<Student> students;
+    //==연관관계 메서드==//
+    public void setStudent(Student student){
+        this.student = student;
+
+    }
+
 
 }

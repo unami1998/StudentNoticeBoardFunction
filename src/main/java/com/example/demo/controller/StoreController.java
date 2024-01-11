@@ -3,7 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Item;
-import com.example.demo.repository.itemRepository;
+import com.example.demo.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class StoreController {
     @Autowired
-    private itemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     @GetMapping("/store")
     public responseDto findStudent(@RequestParam(defaultValue = "name") String name,
@@ -24,7 +24,7 @@ public class StoreController {
     }
 
     @PostMapping("/addItem") //db에 추가하기
-    public responseDto addItem(AddRequestItemDto p1) {
+    public responseDto addItem(ItemDto p1) {
         System.out.println(p1.toString());
         //dto를 entity로 변환
         Item item = p1.toEntity();
