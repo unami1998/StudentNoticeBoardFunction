@@ -23,4 +23,14 @@ public class Student {
     @JoinColumn(name="student_pick_item")
     private List<Item> item;
 
+    public Student(Long id, String name, int age, String address, Job job){
+        this.id= id;
+        this.name= name;
+        this.age= age;
+        this.job= job;
+    }
+
+    public Student() {
+
+    }
 }

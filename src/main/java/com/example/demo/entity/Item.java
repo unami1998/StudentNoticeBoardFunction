@@ -18,15 +18,10 @@ public class Item {
 
     private String itemName;
     private int price;
+
     @ManyToOne
-    @JoinColumn(name="native_student")
-    private Student student;
-
-    //==연관관계 메서드==//
-    public void setStudent(Student student){
-        this.student = student;
-
-    }
+    @JoinColumn(name="order")
+    private Order order;
 
 
 }

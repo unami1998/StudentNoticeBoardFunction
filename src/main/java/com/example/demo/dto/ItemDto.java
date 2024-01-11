@@ -28,7 +28,6 @@ public class ItemDto {
     public Item toEntity(){
         Item item = new Item();
         item.setItemName(this.itemName);
-        item.setItemPrice(this.itemPrice);
         return item;
     }
 

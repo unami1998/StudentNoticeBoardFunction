@@ -3,11 +3,14 @@ package com.example.demo.dto;
 import com.example.demo.entity.Job;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Getter@Setter
 @Transactional(readOnly=true)
 public class StudentDTO {
     @Autowired
@@ -17,7 +20,6 @@ public class StudentDTO {
     @Transactional
     public Long join(Student student){
         validateDuplicateStudent(student); //중복학생 검증
-        Job job = new Job(student.getGrade(), );
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
     }
