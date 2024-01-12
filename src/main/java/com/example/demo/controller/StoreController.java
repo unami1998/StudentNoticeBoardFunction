@@ -24,13 +24,18 @@ public class StoreController {
     }
 
     @PostMapping("/addItem") //db에 추가하기
-    public ResponseDTO addItem(ItemDto p1) {
+    public ResponseDTO createForm (ItemDto p1) {
+
+        Item item = new Item();
+        item.setItemName(p1.getItemName());
+        item.setPrice(p1.getItemPrice());
+
         System.out.println(p1.toString());
+
         //dto를 entity로 변환
-        Item item = p1.toEntity();
         //reposi에게 ENtity를 db에 저장하게
-        Item savedItem = itemRepository.save(item);
-        System.out.print("저장해버리자?" + savedItem.toString());
+        itemRepository.save(item);
+        System.out.print("저장해버리자?" + item.toString());
         return ResponseDTO.test("작업 중" + p1);
     }
 }

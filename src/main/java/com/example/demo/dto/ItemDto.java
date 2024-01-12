@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @Setter
 public class ItemDto {
-    @Autowired
-    private ItemRepository itemRepository;
     private String itemName;
     private int itemPrice;
 
