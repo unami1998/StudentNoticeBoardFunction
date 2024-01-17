@@ -40,19 +40,11 @@ public class ItemController {
         itemsform.addAttribute("items", items);    //items에 다 뿌려
         return ResponseDTO.test("작업 중");
     }
-    @GetMapping("/items/{itemid}/edit")
-    public ResponseDTO updateItem(@PathVariable("itemid") int itemId, Model model){
-        Item item = (Item)itemService.findById(itemId); //itemId 반환
-        ItemDto form = new ItemDto();
-        form.setItemName(item.getItemName());
+    @GetMapping("/items/{item_id}/edit")
+    public ResponseDTO updateItem(@RequestParam("item_id") int id,
+                                  @RequestParam("itemName") String name){
+        itemService.updateItemName(id, name);
         return ResponseDTO.test("작업 중");
-    }
-//    @PostMapping("/items/{itemId}/edit")
-//    public ResponseDTO updateItem(@RequestBody ){
-//
-//        //아이디로 이름 수정
-//        return ResponseDTO.test("작업 중");
-//    }
 
-    //똥오줌 발싸!!
+    }
 }

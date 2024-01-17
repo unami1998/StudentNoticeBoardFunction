@@ -5,6 +5,7 @@ import com.example.demo.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -12,9 +13,6 @@ public class ItemService {
 
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
-    }
-    public void ItemUpdate(int id, String name){
-
     }
 
     public void saveItem(Item item){
@@ -24,7 +22,16 @@ public class ItemService {
     public List<Item> findItems(){
         return itemRepository.findAll();
     }
-    public Item findById(int itemId){
-        return itemRepository.findById(itemId);
+
+//    public Item findById(int itemId){
+//        return itemRepository.findById(itemId);
+//    }
+
+    public void updateItemName(int id, String newName) {
+        Optional<Item> FinditemId = itemRepository.findById(id);
+        FinditemId.ifPresent(item -> {
+            item.setItemName(newName);
+            itemRepository.save(item);
+        });
     }
 }
