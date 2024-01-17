@@ -12,21 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Setter
 public class ItemDto {
     private String itemName;
-    private int itemPrice;
+    private int price;
+    private int itemCount;
 
-    public ItemDto(String itemName, int itemPrice) {
-        this.itemPrice=itemPrice;
-        this.itemName=itemName;
+
+    public ItemDto() {
+
     }
 
     @Override
     public String toString(){
-        return "name:" + itemName+ "Item price: "+ itemPrice + "over";
+        return "name:" + itemName+ "Item price: "+ price + "over";
     }
-    public Item toEntity(){
-        Item item = new Item();
-        item.setItemName(this.itemName);
-        return item;
-    }
+    //==생성 메서드 ==//
 
 }
