@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.Response.orderDto;
+import com.example.demo.entity.Item;
 import com.example.demo.entity.Student;
+import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.DuplicateFormatFlagsException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     //Student 추가
     public int join(Student student){
@@ -30,4 +36,21 @@ public class StudentService {
         }
     }
 
+//    public void addStock(int quantity){
+//        this.stockQuantity += quantity;
+//    }
+//    public void removeStock(int quantity){
+//
+//    }
+
+    public void orderStudent(String name, String itemName) {
+        Optional<Item> findItem = itemRepository.findByItemName(itemName);
+        findItem.ifPresent(item -> {
+            if(itemName != null){
+                int stock = item.getStockQuantity()-1;
+                item.setStockQuantity(stock);
+                itemRepository.save(item);
+            }
+        });
+    }
 }

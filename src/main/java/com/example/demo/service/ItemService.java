@@ -19,13 +19,9 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public List<Item> findItems(){
-        return itemRepository.findAll();
+    public Item findItems(int id){
+        return itemRepository.findById(id).orElse(null);
     }
-
-//    public Item findById(int itemId){
-//        return itemRepository.findById(itemId);
-//    }
 
     public void updateItemName(int id, String newName) {
         Optional<Item> FinditemId = itemRepository.findById(id);
@@ -33,5 +29,9 @@ public class ItemService {
             item.setItemName(newName);
             itemRepository.save(item);
         });
+    }
+
+    public List<Item> getAllItems() {
+        return itemRepository.findAll();
     }
 }

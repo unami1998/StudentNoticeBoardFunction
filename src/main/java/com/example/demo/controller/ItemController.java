@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -21,23 +22,18 @@ public class ItemController {
     private ItemService itemService;
 
     @GetMapping("/items/new")
-    public ResponseDTO createForm(Model model){
-        model.addAttribute("form", new ItemDto());
+    public ResponseDTO viewPersonInfo(@RequestParam("item_id") int id){
+        Item item = itemService.findItems(id);
+        ItemDto itemDto = new ItemDto();
+        itemDto.setPrice(item.getPrice()); // <--이런식으로 하면 프런트한테 값을 전달해준다
+        System.out.println("id값은->" + item.getId() + "이름은" + item.getItemName()
+            +"가격은" + item.getPrice() + "입니다");
         return ResponseDTO.of();
     }
-
-    @PostMapping("/addItem") //db에 추가하기
-    public ResponseDTO createForm (@RequestBody Item item) {
-        item.setItemName(item.getItemName());
-        item.setPrice(item.getPrice());
-        itemService.saveItem(item);
-        return ResponseDTO.test("작업 중"); //책 목록
-    }
-
-    @GetMapping("/items")
-    public ResponseDTO list(Model itemsform){
-        List<Item> items = itemService.findItems();   //service에서 가져 온 다음에
-        itemsform.addAttribute("items", items);    //items에 다 뿌려
+    @GetMapping("/allItem")
+    public ResponseDTO AllInfo(){
+        List<Item> items = itemService.getAllItems();
+        System.out.print("테스트해보자" + items);
         return ResponseDTO.test("작업 중");
     }
     @GetMapping("/items/{item_id}/edit")
@@ -47,4 +43,14 @@ public class ItemController {
         return ResponseDTO.test("작업 중");
 
     }
+    @PostMapping("/addItem") //db에 추가하기
+    public ResponseDTO createForm (@RequestBody Item item) {
+        item.setItemName(item.getItemName());
+        item.setPrice(item.getPrice());
+        item.setStockQuantity(item.getStockQuantity());
+        itemService.saveItem(item);
+        return ResponseDTO.test("작업 중"); //책 목록
+    }
+
+
 }

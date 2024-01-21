@@ -27,23 +27,18 @@ public class Item {
 
     //==비즈니스 로직==//
 
-    public static Item createOrderItem(Item item, int itemPrice, int count){
-        Item orderItem = new Item();
-        orderItem.setPrice(itemPrice);
-        orderItem.setCount(count);
-        item.removeStock(count);
-        return orderItem;
+    @Override
+    public String toString() {
+        return "Item{id=" + id + ", name='" + itemName + "', price=" + price + '}';
     }
-    public void addStock(int quantity){
-        this.stockQuantity += quantity;
-    }
-    //<<==취소할 시 재고 추가
-    public void removeStock(int quantity){
-        int restStock = this.stockQuantity - quantity;
-        if(restStock<0){
-            System.out.print("need more stock");
-        }
-        this.stockQuantity = restStock;
-    }
+
+//    public static Item createOrderItem(Item item, int itemPrice, int count){
+//        Item orderItem = new Item();
+//        orderItem.setPrice(itemPrice);
+//        orderItem.setCount(count);
+//        item.removeStock(count);
+//        return orderItem;
+//    }
+
 
 }
