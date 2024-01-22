@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +16,25 @@ import java.util.List;
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
-
-    //Student 추가
-    public int join(Student student){
-        validateDuplicateStudent(student);
+    public int join(StudentDTO joinStudent){
+        validateDuplicateStudent(joinStudent);
+        Student student = new Student();
+        student.setName(student.getName());
+        student.setAge(student.getAge());
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
     }
 
-    public void validateDuplicateStudent(Student student) {
+    public void validateDuplicateStudent(StudentDTO student) {
         List<Student> existStudent = studentRepository.findByName(student.getName());  //이름으로 중복찾기
         if(!existStudent.isEmpty()){ //중복된 이름 empty가 아니라면 이미 누군가 그 이름을 쓴다는거니깐
             throw new DuplicateFormatFlagsException("이미 존재하는 이름");
         }
     }
 
+    public List<Student> getAllMembers() {
+        System.out.print("studentList:" + studentRepository.findAll());
+        return studentRepository.findAll();
+
+    }
 }

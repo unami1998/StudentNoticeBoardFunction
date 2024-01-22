@@ -23,15 +23,16 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-//    public Item findById(int itemId){
-//        return itemRepository.findById(itemId);
-//    }
-
     public void updateItemName(int id, String newName) {
         Optional<Item> FinditemId = itemRepository.findById(id);
         FinditemId.ifPresent(item -> {
             item.setItemName(newName);
             itemRepository.save(item);
         });
+    }
+
+    public List<Item> getAllMembers() {
+        System.out.print("studentList:" + itemRepository.findAll());
+        return itemRepository.findAll();
     }
 }
