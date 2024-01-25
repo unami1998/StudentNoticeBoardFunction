@@ -22,5 +22,4 @@ public class Student {
     @JoinColumn(name="student")
     private List<Item> item;
 
-
 }

@@ -20,7 +20,7 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public List<Item> findItems(){
+    public List<Item> findItems(int id){
         return itemRepository.findAll();
     }
 
@@ -42,7 +42,4 @@ public class ItemService {
 
     }
 
-    public List<Item> FindBooksBypageRequest(Pageable pageable) {
-
-    }
 }

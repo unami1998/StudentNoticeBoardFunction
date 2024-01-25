@@ -23,11 +23,12 @@ public class ItemController {
 
     @GetMapping("/items/new")
     public ResponseDTO viewPersonInfo(@RequestParam("item_id") int id){
-        Item item = itemService.findItems(id);
+        List<Item> item = itemService.findItems(id);
+
         ItemDto itemDto = new ItemDto();
-        itemDto.setPrice(item.getPrice()); // <--이런식으로 하면 프런트한테 값을 전달해준다
-        System.out.println("id값은->" + item.getId() + "이름은" + item.getItemName()
-            +"가격은" + item.getPrice() + "입니다");
+        itemDto.setPrice(itemDto.getPrice()); // <--이런식으로 하면 프런트한테 값을 전달해준다
+        System.out.println("id값은->" + itemDto.getId() + "이름은" + itemDto.getItemName()
+            +"가격은" + itemDto.getPrice() + "입니다");
         return ResponseDTO.of();
     }
     @GetMapping("/allItem")
@@ -52,11 +53,11 @@ public class ItemController {
         return ResponseDTO.test("작업 중"); //책 목록
     }
     ///////////페이징 처리를 해보고싶었다
-    @GetMapping("/list")
-    @ResponseBody
-    public List<Item> GetItemList(@PageableDefault(page =0, size=3, sort="id") Pageable pageable){
-        //page 0부터 시작할 때 3개의 값만 나오고, 정렬은 id로 한다
-        return itemService.FindBooksBypageRequest(pageable);
-    }
+//    @GetMapping("/list")
+//    @ResponseBody
+//    public List<Item> GetItemList(@PageableDefault(page =0, size=3, sort="id") Pageable pageable){
+//        //page 0부터 시작할 때 3개의 값만 나오고, 정렬은 id로 한다
+//        return itemService.FindBooksBypageRequest(pageable);
+//    }
 
 }
