@@ -57,6 +57,8 @@ public class ItemController {
     public List<Item> GetItemList(@PageableDefault(page =0, size=3, sort="id") Pageable pageable){
         //page 0부터 시작할 때 3개의 값만 나오고, 정렬은 id로 한다
         return itemService.FindBooksBypageRequest(pageable);
+
+        //paging처리를 하기 위해서 service와 controller만 수정했다
     }
 
 }
