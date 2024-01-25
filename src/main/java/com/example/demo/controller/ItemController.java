@@ -3,15 +3,15 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Item;
-import com.example.demo.repository.ItemRepository;
 import com.example.demo.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
+
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -44,13 +44,19 @@ public class ItemController {
 
     }
     @PostMapping("/addItem") //db에 추가하기
-    public ResponseDTO createForm (@RequestBody Item item) {
+    public ResponseDTO createForm (@RequestBody ItemDto item) {
         item.setItemName(item.getItemName());
         item.setPrice(item.getPrice());
         item.setStockQuantity(item.getStockQuantity());
-        itemService.saveItem(item);
+        itemService.saveItem((Item) item);
         return ResponseDTO.test("작업 중"); //책 목록
     }
-
+    ///////////페이징 처리를 해보고싶었다
+    @GetMapping("/list")
+    @ResponseBody
+    public List<Item> GetItemList(@PageableDefault(page =0, size=3, sort="id") Pageable pageable){
+        //page 0부터 시작할 때 3개의 값만 나오고, 정렬은 id로 한다
+        return itemService.FindBooksBypageRequest(pageable);
+    }
 
 }

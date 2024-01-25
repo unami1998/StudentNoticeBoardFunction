@@ -11,7 +11,7 @@ import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

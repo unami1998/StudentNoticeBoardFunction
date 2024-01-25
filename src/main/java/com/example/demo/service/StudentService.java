@@ -36,13 +36,6 @@ public class StudentService {
         }
     }
 
-//    public void addStock(int quantity){
-//        this.stockQuantity += quantity;
-//    }
-//    public void removeStock(int quantity){
-//
-//    }
-
     public void orderStudent(String name, String itemName) {
         Optional<Item> findItem = itemRepository.findByItemName(itemName);
         findItem.ifPresent(item -> {
