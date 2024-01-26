@@ -1,20 +1,20 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Item;
-import com.example.demo.repository.ItemRepository;
-import com.example.demo.repository.StudentRepository;
+
+import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
-
+@AllArgsConstructor
 @Getter
 @Setter
 public class ItemDto {
     private String itemName;
     private int price;
     private int itemCount;
-
+    private int id;
+    private int StockQuantity;
 
     public ItemDto() {
 
@@ -24,6 +24,5 @@ public class ItemDto {
     public String toString(){
         return "name:" + itemName+ "Item price: "+ price + "over";
     }
-    //==생성 메서드 ==//
 
 }
