@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Item;
 import com.example.demo.repository.ItemRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,5 +35,14 @@ public class ItemService {
     public List<Item> getAllMembers() {
         System.out.print("studentList:" + itemRepository.findAll());
         return itemRepository.findAll();
+    }
+
+    public List<Item> getAllItems() {
+        return itemRepository.findAll();
+
+    }
+
+    public List<Item> FindBooksBypageRequest(Pageable pageable) {
+
     }
 }
