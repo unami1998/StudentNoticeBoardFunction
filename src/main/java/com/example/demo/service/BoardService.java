@@ -11,7 +11,14 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
-    public void write(BoardDTO boardDTO) {
+//    public void write(BoardDTO boardDTO) {
+//        Board board = new Board();
+//        board.setTitle(boardDTO.getTitle());
+//        board.setContent(boardDTO.getContent());
+//        boardRepository.save(board);
+//    }
+
+    public void save(BoardDTO boardDTO) {
         Board board = new Board();
         board.setTitle(boardDTO.getTitle());
         board.setContent(boardDTO.getContent());
