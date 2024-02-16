@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student,Long> {
     List<Student> findByName(String name);
 
-    Student findById(int studentId);
+    Student findById(long id);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.DuplicateFormatFlagsException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,13 @@ public class StudentService {
     public List<Student> getAllMembers() {
         System.out.print("studentList:" + studentRepository.findAll());
         return studentRepository.findAll();
-
+    }
+    public void pointStudent(Long id) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if(optionalStudent.isPresent()){
+            optionalStudent.get().increaseGrade();
+        } else {
+            System.out.println("해당 id에 해당하는 Student가 존재하지 않습니다.");
+        }
     }
 }

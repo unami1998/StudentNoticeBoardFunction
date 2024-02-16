@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ItemDto;
 import com.example.demo.entity.Item;
 import com.example.demo.repository.ItemRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,11 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void saveItem(Item item){
+    public void saveItem(ItemDto itDTO){
+        Item item = new Item();
+        item.setItemName(itDTO.getItemName());
+        item.setPrice(itDTO.getPrice());
+        item.setStockQuantity(itDTO.getStockQuantity());
         itemRepository.save(item);
     }
 
@@ -42,4 +48,7 @@ public class ItemService {
 
     }
 
+    public Page<Item> FindBooksBypageRequest(Pageable pageable) {
+        return null;
+    }
 }

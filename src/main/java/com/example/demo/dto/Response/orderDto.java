@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class orderDto {
     private String studentName;
-    @Getter
     private String itemName;
 
 }

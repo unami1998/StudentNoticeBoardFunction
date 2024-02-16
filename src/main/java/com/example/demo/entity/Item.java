@@ -10,9 +10,10 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @Entity
-public class Item extends ItemDto {
+public class Item {
     @Id
     @GeneratedValue
     @Column(name = "item_id")
@@ -20,7 +21,6 @@ public class Item extends ItemDto {
 
     private String itemName;
     private int price;
-    private int count;
 
     private int stockQuantity; //재고수량
 
@@ -28,11 +28,26 @@ public class Item extends ItemDto {
     @JoinColumn(name = "id")
     private Student student;
 
+//    @ManyToOne
+//    @JoinColumn(name = "order_item")
+//    private Item item;
+
     public Item() {
 
     }
 
 
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
+
+    public void removeStock(int quantity) throws Exception {
+        int restStock = this.stockQuantity - quantity;
+        if (restStock < 0) {
+            throw new Exception("need more stock");
+        }
+        this.stockQuantity = restStock;
+    }
     @Override
     public String toString() {
         return "Item{id=" + id + ", name='" + itemName + "', price=" + price + '}';

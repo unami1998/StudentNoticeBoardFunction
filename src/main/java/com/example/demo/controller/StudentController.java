@@ -5,13 +5,14 @@ import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RequestMapping("/student")
-@RestController
+@Controller
 public class StudentController {
     @Autowired
     private StudentService studentService;
@@ -19,10 +20,12 @@ public class StudentController {
     public List<Student> GetAllMember(){
         return studentService.getAllMembers();
     }
-    @PostMapping("/addStudent")
+    @PostMapping("/login")
     public ResponseDTO createStudent(@RequestBody StudentDTO student) {
         studentService.join(student);
         System.out.println(student.getName());
         return ResponseDTO.test("작업 중입니다(studentId:" + student + ")");
     }
+
+
 }
