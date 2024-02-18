@@ -26,6 +26,11 @@ public class StudentController {
         System.out.println(student.getName());
         return ResponseDTO.test("작업 중입니다(studentId:" + student + ")");
     }
+    @GetMapping("/grade")
+    public ResponseDTO gradeStudent(@RequestParam Long studentId){
+        studentService.pointStudent(studentId);
+        return ResponseDTO.test("작업중입니다.");
+    }
 
 
 }

@@ -37,6 +37,7 @@ public class StudentService {
         System.out.print("studentList:" + studentRepository.findAll());
         return studentRepository.findAll();
     }
+
     public void pointStudent(Long id) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if(optionalStudent.isPresent()){
