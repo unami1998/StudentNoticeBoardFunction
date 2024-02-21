@@ -1,13 +1,10 @@
 package com.example.demo.entity;
 
-import com.example.demo.dto.ItemDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,18 +19,19 @@ public class Item {
     private String itemName;
     private int price;
 
+    @JsonProperty("stockQuantity")
     private int stockQuantity; //재고수량
 
-    @ManyToOne
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
     private Student student;
 
-//    @ManyToOne
-//    @JoinColumn(name = "order_item")
-//    private Item item;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orders_id")
+    private Orders orders;
 
     public Item() {
-
+        this.stockQuantity = 5;
     }
 
 

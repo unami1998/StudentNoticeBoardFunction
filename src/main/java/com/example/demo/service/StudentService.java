@@ -20,8 +20,9 @@ public class StudentService {
     public int join(StudentDTO joinStudent){
         validateDuplicateStudent(joinStudent);
         Student student = new Student();
-        student.setName(student.getName());
-        student.setAge(student.getAge());
+        student.setName(joinStudent.getName());
+        student.setAge(joinStudent.getAge());
+        student.setAddress(joinStudent.getAddress());
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
     }
@@ -38,12 +39,18 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void pointStudent(Long id) {
+    public StudentDTO myInfo(Long id) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
-        if(optionalStudent.isPresent()){
-            optionalStudent.get().increaseGrade();
+        if(optionalStudent.isPresent()){ //그 해당 아이디가 있다면
+            Student student=optionalStudent.get();
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setId(student.getId());
+            studentDTO.setName(student.getName());
+            studentDTO.setAge(student.getAge());
+            return studentDTO;
         } else {
             System.out.println("해당 id에 해당하는 Student가 존재하지 않습니다.");
+            return null;
         }
     }
 }

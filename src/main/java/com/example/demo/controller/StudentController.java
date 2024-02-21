@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RequestMapping("/student")
-@Controller
+@RestController
 public class StudentController {
     @Autowired
     private StudentService studentService;
@@ -20,17 +20,17 @@ public class StudentController {
     public List<Student> GetAllMember(){
         return studentService.getAllMembers();
     }
-    @PostMapping("/login")
+
+    @PostMapping("/createStudent")
     public ResponseDTO createStudent(@RequestBody StudentDTO student) {
         studentService.join(student);
         System.out.println(student.getName());
         return ResponseDTO.test("작업 중입니다(studentId:" + student + ")");
     }
-    @GetMapping("/grade")
+    @GetMapping("/myinfo")
     public ResponseDTO gradeStudent(@RequestParam Long studentId){
-        studentService.pointStudent(studentId);
+        studentService.myInfo(studentId);
         return ResponseDTO.test("작업중입니다.");
     }
-
 
 }

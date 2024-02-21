@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-public class Order{
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="order_id")
@@ -23,7 +22,7 @@ public class Order{
 
     private LocalDateTime orderDate; //주문시간
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Item> orderItems = new ArrayList<>();
+    @OneToMany(mappedBy = "orders")
+    private List<Item> orderItems;
 
 }

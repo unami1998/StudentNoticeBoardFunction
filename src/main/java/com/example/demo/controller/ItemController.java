@@ -7,11 +7,8 @@ import com.example.demo.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,10 +28,9 @@ public class ItemController {
         return ResponseDTO.of();
     }
     @GetMapping("/allItem")
-    public ResponseDTO AllInfo(){
+    public List<Item> AllInfo(){
         List<Item> items = itemService.getAllItems();
-        System.out.print("테스트해보자" + items);
-        return ResponseDTO.test("작업 중");
+        return items;
     }
     @GetMapping("/items/{item_id}/edit")
     public ResponseDTO updateItem(@RequestParam("item_id") int id,
@@ -50,12 +46,11 @@ public class ItemController {
         itemService.saveItem(item);
         return ResponseDTO.test("작업 중"); //책 목록
     }
-    ///////////페이징 처리를 해보고싶었다
-    @GetMapping("/list")
-    @ResponseBody
-    public Page<Item> GetItemList(@PageableDefault(page =0, size=3, sort="id") Pageable pageable){
-        //page 0부터 시작할 때 3개의 값만 나오고, 정렬은 id로 한다
-        return itemService.FindBooksBypageRequest(pageable);
+
+    @GetMapping("/items/addStock")
+    public void addStock(@RequestParam("itemName") String itemName){
+        itemService.addStockItem(itemName);
+        System.out.print("해당 상품 이름으로 재고 하나 추가했습니다");
     }
 
 }

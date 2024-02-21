@@ -18,26 +18,29 @@ public class Student {
     private String name;
     private String address;
 
-//    @ElementCollection
-//    private lString[] grade = {"freshman","sophomore","junior","senior"};
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
 
-    private String grade;
     private int pointCount;
 
+    public Student() {
+        this.grade = Grade.FRESHMAN;
+        this.pointCount = 0;
+    }
+
     @OneToMany
-    @JoinColumn(name="student")
+    @JoinColumn(name = "student")
     private List<Item> item;
 
-    @OneToMany
-    @JoinColumn(name="grade")
-    private List<Grade> upgrade;
+    public void increaseGrade() {
+        this.pointCount += 1;
 
-    public Student(){
-        this.grade = "freshman"; //기본 값 이걸로 설정
+        if(this.pointCount ==3){
+            this.grade = Grade.SOPHOMORE;
+        }else if (this.pointCount == 20) {
+            this.grade = Grade.JUNIOR;
+        } else if (this.pointCount == 30) {
+            this.grade = Grade.SENIOR;
+        }
     }
-    public void increaseGrade(){
-        pointCount++;
-        System.out.println("학점 증가 현재학점" +pointCount);
-    }
-
 }
