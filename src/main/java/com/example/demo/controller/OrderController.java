@@ -12,14 +12,10 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @PostMapping("/order")
-    public ResponseDTO orderItem(@RequestBody OrderDto orderDto) {
-        try{
+    public ResponseDTO orderItem(@RequestBody OrderDto orderDto) throws Exception {
             orderService.orderItem(orderDto.getItemName(), orderDto.getId());
             System.out.println("주문 성공");
-        }catch (Exception e){
-            System.out.println("주문 실패");
-            ResponseDTO.test("실패했다");
-        }
+
         return ResponseDTO.test("주문한 상품 이름" + orderDto.getItemName() + ")");
     }
 }
