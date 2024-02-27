@@ -16,7 +16,7 @@ public class OrderController {
     public ResponseDTO orderItem(@RequestBody OrderDto orderDto) throws Exception {
         StudentDTO studentDTO = orderDto.getUser();
         String userName = studentDTO != null ? studentDTO.getName() : null;
-        orderService.orderItem(orderDto.getItemName(), userName);
+//        orderService.orderItem(orderDto.getItemName(), userName);
         orderService.orderItem(orderDto.getItemName(), orderDto.getUser().getName());
         System.out.println("주문 성공");
 

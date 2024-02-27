@@ -50,8 +50,9 @@ public class ItemService {
     }
 
     public void addStockItem(String itemName) {
-        Item item = itemRepository.findByItemName(itemName);
-        if(item !=null){
+        Optional<Item> itemOption = itemRepository.findByItemName(itemName);
+        if(itemOption.isPresent()){
+            Item item = itemOption.get();
             item.addStock(1);
             itemRepository.save(item);
             System.out.println("해당 상품 재고 증가"+itemName + "현재 재고" + item.getStockQuantity());

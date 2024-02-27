@@ -27,23 +27,26 @@ public class OrderService {
     }
 
     public long orderItem(String itemName, String studentName) throws Exception {
-        Optional<Item> existItem = itemRepository.findByItemName(itemName);
+        Optional<Item> existItemOptional = itemRepository.findByItemName(itemName);
 
-        if (existItem.isPresent()) {
-            if (Objects.equals(existItem.get().getStudent().getName(), studentName)) {  //student 이름과 학생 이름이 맞지않다면
-                existItem.get().removeStock(1);  //내가 주문한 갯수만큼 재고 없애버리고
+        if (existItemOptional.isPresent()) {
+            Item existItem = existItemOptional.get();
+            if (Objects.equals(existItem.getStudent().getName(), studentName)) {  //student 이름과 학생 이름이 맞지않다면
+                existItem.removeStock(1);  //내가 주문한 갯수만큼 재고 없애버리고
 
                 Orders order = new Orders();
-                order.getOrderItems().add(existItem.get());
+                order.getOrderItems().add(existItem);
                 orderRepository.save(order);
-                itemRepository.save(existItem.get());
+                itemRepository.save(existItem);
                 Student student = new Student();
                 student.increaseGrade();
 
-                return currentOrder.getId();
+                return existItem.getId();
             } else {
                 return -1;
             }
+        }else{
+            return -1;
         }
     }
 }
