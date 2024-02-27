@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
     @PostMapping("/order")
     public ResponseDTO orderItem(@RequestBody OrderDto orderDto) throws Exception {
-            orderService.orderItem(orderDto.getItemName(), orderDto.getId());
-            System.out.println("주문 성공");
+        StudentDTO studentDTO = orderDto.getUser();
+        String userName = studentDTO != null ? studentDTO.getName() : null;
+        orderService.orderItem(orderDto.getItemName(), userName);
+        orderService.orderItem(orderDto.getItemName(), orderDto.getUser().getName());
+        System.out.println("주문 성공");
 
         return ResponseDTO.test("주문한 상품 이름" + orderDto.getItemName() + ")");
     }

@@ -32,6 +32,7 @@ public class ItemService {
 
     public void updateItemName(int id, String newName) {
         Optional<Item> FinditemId = itemRepository.findById(id);
+
         FinditemId.ifPresent(item -> {
             item.setItemName(newName);
             itemRepository.save(item);

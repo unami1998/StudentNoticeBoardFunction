@@ -18,7 +18,7 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     public int join(StudentDTO joinStudent){
-        validateDuplicateStudent(joinStudent);
+        validateDuplicateStudent(joinStudent.getName());
         Student student = new Student();
         student.setName(joinStudent.getName());
         student.setAge(joinStudent.getAge());
@@ -27,8 +27,8 @@ public class StudentService {
         return student.getId();
     }
 
-    public void validateDuplicateStudent(StudentDTO student) {
-        List<Student> existStudent = studentRepository.findByName(student.getName());  //이름으로 중복찾기
+    public void validateDuplicateStudent(String studentName) {
+        List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
         if(!existStudent.isEmpty()){ //중복된 이름 empty가 아니라면 이미 누군가 그 이름을 쓴다는거니깐
             throw new DuplicateFormatFlagsException("이미 존재하는 이름");
         }

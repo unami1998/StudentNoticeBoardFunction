@@ -11,6 +11,4 @@ public class OrderDto {
     private Long id;
     private int itemCount;
     private String itemName;
-
-
 }
