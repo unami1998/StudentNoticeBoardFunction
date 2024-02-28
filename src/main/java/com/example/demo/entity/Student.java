@@ -33,7 +33,7 @@ public class Student {
     private List<Item> item;
 
     public void increaseGrade() {
-        this.pointCount += 1;
+        this.pointCount ++;
 
         if(this.pointCount ==3){
             this.grade = Grade.SOPHOMORE;

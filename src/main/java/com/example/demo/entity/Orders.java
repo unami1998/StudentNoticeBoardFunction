@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,6 +24,9 @@ public class Orders {
     private LocalDateTime orderDate; //주문시간
 
     @OneToMany(mappedBy = "orders")
-    private List<Item> orderItems;
+    private List<Item> orderItems = new ArrayList<>();
 
+    public Orders(){
+        this.orderItems = new ArrayList<>();
+    }
 }
