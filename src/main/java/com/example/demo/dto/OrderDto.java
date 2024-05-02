@@ -9,6 +9,5 @@ public class OrderDto {
     private StudentDTO user;
     
     private Long id;
-    private int itemCount;
     private String itemName;
 }

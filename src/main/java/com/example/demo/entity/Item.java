@@ -22,9 +22,6 @@ public class Item {
     @JsonProperty("stockQuantity")
     private int stockQuantity; //재고수량
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
-    private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orders_id")

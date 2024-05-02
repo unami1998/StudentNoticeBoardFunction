@@ -9,6 +9,7 @@ import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,8 @@ public class OrderService {
                     existItem.removeStock(1);
                     Orders order = new Orders();
                     order.getOrderItems().add(existItem);
+                    order.setStudent(student);
+                    order.setOrderDate(LocalDateTime.now());
                     orderRepository.save(order);
                     itemRepository.save(existItem);
                     student.increaseGrade();
