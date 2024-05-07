@@ -5,12 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentDTO {
-    private int studentId;
+public class StudentLoginDTO {
     private String email;
     private String password;
-    private int age;
-    private String name;
-    private String address;
-
 }

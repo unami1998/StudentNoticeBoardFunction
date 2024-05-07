@@ -5,14 +5,17 @@ import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class StudentService {
     @Autowired
@@ -26,6 +29,26 @@ public class StudentService {
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
     }
+
+    public long login(String email, String password) {
+        Student student = studentRepository.findByEmailAndPassword(email,password);
+        if(!student.equals(email)){
+            return -1;
+        }
+        if(!student.equals(password)){
+            return -2;
+        }
+        return 1;
+    }
+
+    @Transactional
+    public long join2(String email){
+        Student student = new Student();
+        student.setEmail(email);
+        studentRepository.save(student);
+        return student.getId();
+    }
+
 
     public void validateDuplicateStudent(String studentName) {
         List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
@@ -44,7 +67,7 @@ public class StudentService {
         if(optionalStudent.isPresent()){ //그 해당 아이디가 있다면
             Student student=optionalStudent.get();
             StudentDTO studentDTO = new StudentDTO();
-            studentDTO.setId(student.getId());
+            //studentDTO.setId(student.getId());
             studentDTO.setName(student.getName());
             studentDTO.setAge(student.getAge());
             return studentDTO;
@@ -53,4 +76,6 @@ public class StudentService {
             return null;
         }
     }
+
+
 }

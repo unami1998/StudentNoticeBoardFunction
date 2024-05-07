@@ -4,17 +4,16 @@ import com.example.demo.dto.Response.EmptyResponseDTO;
 import com.example.demo.dto.Response.TestResponseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@Setter
-@RequiredArgsConstructor(staticName="of")
 public class ResponseDTO {
     private Header header=new Header();
     private Result result=null;
+    private Custom custom=new Custom();
 
     @JsonIgnore
     public static ResponseDTO Unimplemented = new ResponseDTO(false,true,"unimplemented");
@@ -47,6 +46,23 @@ public class ResponseDTO {
         return Result.create(EmptyResponseDTO.class,isSuccess,message);
     }
 
+
+    @Getter
+    private static class ResultImpl extends Result {
+        private final Object data;
+        public ResultImpl(Object data) {
+            this.data=data;
+        }
+    }
+    public static ResponseDTO create(boolean isSuccess, String message, Object data) {
+        ResponseDTO dto= new ResponseDTO(isSuccess,true,message);
+        try {
+            dto.result= new ResultImpl(data);
+        } catch (Exception ignored) {
+        }
+        return dto;
+    }
+
     public static ResponseDTO create(boolean isSuccess, String message, Class<?> clazz) {
         ResponseDTO dto= new ResponseDTO(isSuccess,true,message);
         try {
@@ -61,7 +77,21 @@ public class ResponseDTO {
         private String type = "fail";
         private String message="empty";
     }
-
+    @Getter
+    static public class Item{
+        private String key;
+        private Object value;
+        public Item(String key, Object value) {
+            this.key=key;
+            this.value=value;
+        }
+    }
+    @Getter
+    static public class Custom{
+        @JsonIgnore
+        private static ArrayList<Item> EmptyList=new ArrayList<>(0);
+        private List<Item> items=EmptyList;
+    }
     static abstract public class Result {
         @JsonIgnore
         private ResponseDTO responseDto = null;
@@ -85,6 +115,17 @@ public class ResponseDTO {
             }
             return null;
 
+        }
+
+
+        public Result setCustomData(String key, Object value) {
+            if(value==null)
+                return this;
+            if(responseDto.custom.items==Custom.EmptyList) {
+                responseDto.custom.items = new ArrayList<>(0);
+            }
+            responseDto.custom.items.add(new Item(key,value));
+            return this;
         }
     }
 

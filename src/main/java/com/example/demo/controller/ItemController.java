@@ -25,7 +25,8 @@ public class ItemController {
         itemDto.setPrice(itemDto.getPrice());
         System.out.println("id값은->" + itemDto.getId() + "이름은" + itemDto.getItemName()
             +"가격은" + itemDto.getPrice() + "입니다");
-        return ResponseDTO.of();
+        return ResponseDTO.test("작업 중"); //책 목록
+
     }
     @GetMapping("/allItem")
     public List<Item> AllInfo(){
