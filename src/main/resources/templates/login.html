@@ -10,20 +10,22 @@
 
 <h2>로그인 유저 : </h2>
 
-<form action="/student/login" method="GET" enctype="multipart/form-data">
-        <input type="text" name="email" />
-        <input type="password" name="password" />
-        <button>로그인</button>
+<form action="/student/login" method="POST" enctype="multipart/form-data">
+          이메일: <input type="text" name="email" />
+            <br>
+          비밀번호: <input type="password" name="password" />
+        <button type="submit">로그인</button>
     </form>
+    <br>
     <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=e5d0f2d04f429ca2d3f8a545370fc539&redirect_uri=http://localhost:8080/kakao_login.html">카카오 로그인</a>
     <!-- /oauth2/authorization/{registrationId}에 요청이 들어오면,
     스프링 시큐리티가 provider의 authorization-uri로 요청을 전달한다-->
     <br><br>
 
-    <a href="/joinForm">회원가입하기</a><br>
+    <a href="joinForm.html">회원가입하기</a><br>
 </div>
 
-    <a href="/logout">로그아웃</a>
+   <!-- <a href="/logout">로그아웃</a> -->
 </div>
 
 <br><br>
