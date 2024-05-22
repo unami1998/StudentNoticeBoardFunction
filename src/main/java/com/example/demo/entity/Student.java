@@ -15,10 +15,14 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int age;
-    private String name;
-    private String address;
+    private String name; //이름
+    private String nickName;
     private String email;
     private String password;
+
+
+    private String address;
+
 
     @Enumerated(EnumType.STRING)
     private Grade grade;

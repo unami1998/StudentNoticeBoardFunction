@@ -21,11 +21,12 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     public int join(StudentDTO joinStudent){
-        validateDuplicateStudent(joinStudent.getName());
+        validateDuplicateStudent(joinStudent.getName());  //이름이 중복
         Student student = new Student();
         student.setName(joinStudent.getName());
-        student.setAge(joinStudent.getAge());
-        student.setAddress(joinStudent.getAddress());
+        student.setNickName(joinStudent.getNickName());
+        student.setEmail(joinStudent.getEmail());
+        student.setPassword(joinStudent.getPassword());
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
     }
