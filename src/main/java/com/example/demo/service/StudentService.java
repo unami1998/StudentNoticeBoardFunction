@@ -42,15 +42,6 @@ public class StudentService {
         return 1;
     }
 
-    @Transactional
-    public long join2(String email){
-        Student student = new Student();
-        student.setEmail(email);
-        studentRepository.save(student);
-        return student.getId();
-    }
-
-
     public void validateDuplicateStudent(String studentName) {
         List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
         if(!existStudent.isEmpty()){ //중복된 이름 empty가 아니라면 이미 누군가 그 이름을 쓴다는거니깐
@@ -70,7 +61,7 @@ public class StudentService {
             StudentDTO studentDTO = new StudentDTO();
             //studentDTO.setId(student.getId());
             studentDTO.setName(student.getName());
-            studentDTO.setAge(student.getAge());
+         //   studentDTO.setAge(student.getAge());
             return studentDTO;
         } else {
             System.out.println("해당 id에 해당하는 Student가 존재하지 않습니다.");

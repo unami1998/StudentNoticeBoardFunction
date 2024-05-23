@@ -40,17 +40,23 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+    public String login(@RequestParam String email,
+                        @RequestParam String password) {
         long loginResult = studentService.login(email, password);
         if (loginResult == -1) {
-            model.addAttribute("error", "이메일이 틀렸습니다.");
+            System.out.println("로그인 실패");
             return "login"; // 로그인 페이지로 다시 돌아감
         }
         if (loginResult == -2) {
-            model.addAttribute("error", "비밀번호가 틀렸습니다.");
+            System.out.println("비밀번호 틀림");
+
             return "login"; // 로그인 페이지로 다시 돌아감
         }
-        return "redirect:/home"; // 로그인 성공 시 홈 페이지로 리다이렉트
+        return "redirect:/student/home"; // 로그인 성공 시 홈 페이지로 리다이렉트
+    }
+    @GetMapping("/home")
+    public String home() {
+        return "home"; // home.html 템플릿 반환
     }
 
     @GetMapping("/myinfo")
