@@ -61,7 +61,11 @@ public class StudentService {
             StudentDTO studentDTO = new StudentDTO();
             //studentDTO.setId(student.getId());
             studentDTO.setName(student.getName());
+<<<<<<< HEAD
          //   studentDTO.setAge(student.getAge());
+=======
+
+>>>>>>> 597aae8 (//회원가입할 때 이름, 닉네임, 이메일, 비밀번호 입력하기)
             return studentDTO;
         } else {
             System.out.println("해당 id에 해당하는 Student가 존재하지 않습니다.");
