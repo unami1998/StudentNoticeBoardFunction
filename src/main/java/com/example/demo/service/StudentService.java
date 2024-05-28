@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.StudentDTO;
+import com.example.demo.dto.StudentLoginDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +34,15 @@ public class StudentService {
 
     public long login(String email, String password) {
         Student student = studentRepository.findByEmailAndPassword(email,password);
-        if(!student.equals(email)){
+        if(student ==null){
             return -1;
         }
-        if(!student.equals(password)){
+        if(!student.getPassword().equals(password)){
             return -2;
         }
         return 1;
     }
+
 
     public void validateDuplicateStudent(String studentName) {
         List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
@@ -61,17 +63,16 @@ public class StudentService {
             StudentDTO studentDTO = new StudentDTO();
             //studentDTO.setId(student.getId());
             studentDTO.setName(student.getName());
-<<<<<<< HEAD
-         //   studentDTO.setAge(student.getAge());
-=======
 
->>>>>>> 597aae8 (//회원가입할 때 이름, 닉네임, 이메일, 비밀번호 입력하기)
+         //   studentDTO.setAge(student.getAge());
+
             return studentDTO;
         } else {
             System.out.println("해당 id에 해당하는 Student가 존재하지 않습니다.");
             return null;
         }
     }
+
 
 
 }
