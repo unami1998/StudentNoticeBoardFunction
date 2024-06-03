@@ -34,8 +34,8 @@ public class StudentController {
         long loginResult = studentService.login(email, password);
         if (loginResult == -1) {
             System.out.println("로그인 실패");
-            model.addAttribute("loginError", true);
-            model.addAttribute("Lfail",false);
+         //   model.addAttribute("loginError", true);
+            model.addAttribute("loginError","로그인 실패");
             return "index"; // 로그인 페이지로 다시 돌아감
         }
         if (loginResult == -2) {

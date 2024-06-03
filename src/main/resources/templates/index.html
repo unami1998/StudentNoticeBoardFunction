@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -304,6 +304,7 @@
     <div class="modal_popup">
         <h3>모달 팝업 타이틀 입니다!</h3>
         <p>치와와 뽀메의 힘든 여정</p>
+        <p th:if="${loginError}" th:text="${Lfail}"></p>
         <button type="button" class="close_btn">닫기</button>
     </div>
 </div>
@@ -369,11 +370,7 @@
         modal.style.display = 'none';
     });
 
-    var Lfail = /*[[${Lfail}]]*/ false;
 
-    if(Lfail){
-        modal.style.display='block';
-    }
 
 
     const signUpButton = document.getElementById('signUp');
