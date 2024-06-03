@@ -31,12 +31,40 @@
             text-align: center;
         }
 
-        .modal_body {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+        .modal {
+            /*팝업 배경*/
+            display: block; /*평소에는 보이지 않도록*/
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: rgba(0,0,0,0.5);
         }
+        .modal .modal_popup {
+            /*팝업*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 20px;
+        }
+        .modal .modal_popup .close_btn {
+            display: block;
+            padding: 10px 20px;
+            background-color: rgb(116, 0, 0);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+
+
 
 
         p {
@@ -127,6 +155,9 @@
             width: 50%;
             z-index: 2;
         }
+
+
+
 
         .container.right-panel-active .sign-in-container {
             transform: translateX(100%);
@@ -269,13 +300,14 @@
 </head>
 <body>
 
-<div class="modal" id="loginModal">
-    <div class="modal_body">
-        <h2>로그인 실패</h2>
-        <p>모달창 내용 </p>
-        <button onclick="closeModal()">닫기</button>
+<div class="modal">
+    <div class="modal_popup">
+        <h3>모달 팝업 타이틀 입니다!</h3>
+        <p>치와와 뽀메의 힘든 여정</p>
+        <button type="button" class="close_btn">닫기</button>
     </div>
 </div>
+
 
 <div class="container" id="container">
     <div class="form-container sign-up-container">
@@ -289,10 +321,12 @@
         </form>
     </div>
 
+
     <div class="form-container sign-in-container">
         <!--로그인-->
         <form action="/student/login" method="post">
             <h1>Sign in</h1>
+
             <input type="email" id="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
             <a href="#">Forgot your password?</a>
@@ -300,6 +334,10 @@
                 Kakao 로그인</a>
             <button type="submit" onclick="showLoginModal()">Sign In</button>
         </form>
+
+
+
+
     </div>
 
 
@@ -321,10 +359,21 @@
 </div>
 <script>
     const modal = document.querySelector('.modal');
-    const btnOpenModal = document.querySelector('.btn-open-modal');
-    btnOpenModal.addEventListener("click", () => {
-        modal.style.display = "flex";
+    const modalOpen = document.querySelector('.modal_btn');
+    const modalClose = document.querySelector('.close_btn');
+
+    //닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+    modalClose.addEventListener('click',function(){
+        //display 속성을 none으로 변경
+        console.log("허스키");
+        modal.style.display = 'none';
     });
+
+    var Lfail = /*[[${Lfail}]]*/ false;
+
+    if(Lfail){
+        modal.style.display='block';
+    }
 
 
     const signUpButton = document.getElementById('signUp');
@@ -332,30 +381,12 @@
     const container = document.getElementById('container');
 
     signUpButton.addEventListener('click', () => {
-        container.classList.add('right-panel-active');
+        container.classList.add("right-panel-active");
     });
-
-    function showLoginModal() {
-        $('#loginModal').modal('show');
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const showModal = urlParams.has('showModal');
-
-    if (showModal) {
-        $(document).ready(function () {
-            showLoginModal();
-        });
-    }
 
     signInButton.addEventListener('click', () => {
-        container.classList.remove('right-panel-active');
+        container.classList.remove("right-panel-active");
     });
-
-
-    function closeModal() {
-        $('#loginModal').css('display', 'none');
-    }
 </script>
 
 
