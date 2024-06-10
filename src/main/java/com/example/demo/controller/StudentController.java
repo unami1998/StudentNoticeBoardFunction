@@ -24,7 +24,7 @@ public class StudentController {
 
     @GetMapping("/loginPage")
     public String loginForm() {
-        return "login"; // login.html 템플릿 반환
+        return "index"; // login.html 템플릿 반환
     }
 
     @PostMapping("/login")
@@ -35,12 +35,12 @@ public class StudentController {
         if (loginResult == -1) {
             System.out.println("로그인 실패");
          //   model.addAttribute("loginError", true);
-            model.addAttribute("loginError","로그인 실패");
+            model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
         if (loginResult == -2) {
             System.out.println("비밀번호 틀림");
-            model.addAttribute("loginError", true);
+            model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
         return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
