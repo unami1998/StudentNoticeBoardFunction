@@ -33,7 +33,7 @@
 
         .modal {
             /*팝업 배경*/
-            display: block; /*평소에는 보이지 않도록*/
+            display: none; /*평소에는 보이지 않도록*/
             position: absolute;
             top:0;
             left: 0;
@@ -365,7 +365,7 @@
         <!--로그인-->
         <form action="/student/login" method="post">
             <h1>Sign in</h1>
-
+            <p th:text="${showModal}"></p>
             <input type="email" id="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
             <a href="#">Forgot your password?</a>
@@ -373,10 +373,6 @@
                 Kakao 로그인</a>
             <button type="submit" onclick="showLoginModal()">Sign In</button>
         </form>
-
-
-
-
     </div>
 
     <div id="myModal" class="modal">
@@ -453,6 +449,12 @@
         //display 속성을 none으로 변경
         console.log("허스키");
         modal.style.display = 'none';
+    });
+
+    document.addEventListener("DOMContentLoaded", function (){
+        if("${showModal}"){
+            modal.style.display = 'block';
+        }
     });
 
 
