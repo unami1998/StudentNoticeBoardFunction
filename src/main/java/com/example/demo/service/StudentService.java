@@ -25,7 +25,6 @@ public class StudentService {
         validateDuplicateStudent(joinStudent.getName());  //이름이 중복
         Student student = new Student();
         student.setName(joinStudent.getName());
-        student.setNickName(joinStudent.getNickName());
         student.setEmail(joinStudent.getEmail());
         student.setPassword(joinStudent.getPassword());
         studentRepository.save(student); //이렇게 해도 추가가 된다

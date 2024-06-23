@@ -18,6 +18,18 @@ import java.util.List;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+    /*
+조회할 때 회원명 얼룩이 할 때
+
+얼
+  룩이
+  곰이
+  고라몽
+
+이런 거 기술 여튼 이런식으로 하는거 구현
+
+
+*/
 
     @Autowired
     private StudentService studentService;
@@ -34,7 +46,6 @@ public class StudentController {
         long loginResult = studentService.login(email, password);
         if (loginResult == -1) {
             System.out.println("로그인 실패");
-         //   model.addAttribute("loginError", true);
             model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
@@ -43,20 +54,19 @@ public class StudentController {
             model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
+
         return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 
-    @RequestMapping( value ="/abc/xyz.html")
-    public String getMyModal()
-    {
-        //Do something here and return modal
 
-        return "testModal";
-    }
+    @PostMapping("/createStudent")
+    public String createStudent(StudentDTO joinStudent,
+                        Model model) {
+        studentService.join(joinStudent);
+        model.addAttribute("myName", true);
 
-    @GetMapping("/home")
-    public String home() {
-        return "home"; // home.html 템플릿 반환
+
+        return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 }
 

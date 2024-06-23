@@ -63,10 +63,6 @@
             transition: box-shadow 0.2s;
         }
 
-
-
-
-
         p {
             font-size: 14px;
             font-weight: 100;
@@ -300,34 +296,35 @@
 </head>
 <body>
 
+
 <div class="modal">
     <div class="modal_popup">
         <h3>모달 팝업 타이틀 입니다!</h3>
-        <p>치와와 뽀메의 힘든 여정</p>
+        <p>살려주세요</p>
         <p th:if="${loginError}" th:text="${Lfail}"></p>
         <button type="button" class="close_btn">닫기</button>
     </div>
 </div>
 
-
 <div class="container" id="container">
     <div class="form-container sign-up-container">
         <!--회원가입-->
-        <form action="#">
+        <form action="/student/createStudent" method="post">
             <h1>Create Account</h1>
-            <input type="text" placeholder="Name"/>
-            <input type="email" placeholder="Email"/>
-            <input type="password" placeholder="Password"/>
+            <input type="text" id="signup-name" name="name" placeholder="Name" required/>
+            <input type="email" id="signup-email" name="email" placeholder="Email"/>
+            <input type="password" id="signup-password" placeholder="Password"/>
             <button>Sign Up</button>
         </form>
     </div>
+
 
 
     <div class="form-container sign-in-container">
         <!--로그인-->
         <form action="/student/login" method="post">
             <h1>Sign in</h1>
-            <p th:text="${showModal}"></p>
+            <p th:text="${showModal}">안녕하시뭉?</p>
             <input type="email" id="email" name="email" placeholder="Email" required>
             <input type="password" id="password" name="password" placeholder="Password" required>
             <a href="#">Forgot your password?</a>
@@ -336,7 +333,6 @@
             <button type="submit" onclick="showLoginModal()">Sign In</button>
         </form>
     </div>
-
 
     <!--회원가입 -->
     <div class="overlay-container">
@@ -354,38 +350,41 @@
         </div>
     </div>
 </div>
-<script>
+<script th:inline="javascript">
     const modal = document.querySelector('.modal');
-    const modalOpen = document.querySelector('.modal_btn');
     const modalClose = document.querySelector('.close_btn');
 
     //닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+    const signInButton = document.getElementById('signIn');
+    const signUpButton = document.getElementById('signUp');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+
     modalClose.addEventListener('click',function(){
         //display 속성을 none으로 변경
-        console.log("허스키");
         modal.style.display = 'none';
     });
 
     document.addEventListener("DOMContentLoaded", function (){
-        if("${showModal}"){
-            modal.style.display = 'block';
+        var showModal = /*[[${showModal}]]*/ false;  //script에선 controller에서 저장한 변수를 가져올 땐 [를 두 개를 쓴다
+                                            //html.은 ""가 된다
+        console.log(showModal);
+        if(showModal){
+            modal.style.display='block';
         }
     });
 
 
 
 
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
 
-    signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
-    });
-
-    signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-    });
 </script>
 
 
