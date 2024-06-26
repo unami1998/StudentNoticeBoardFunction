@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -14,8 +15,9 @@ import reactor.netty.http.client.HttpClient;
 import java.time.Duration;
 import java.util.function.Function;
 
+
 @Configuration
-public class WebClientConfig {
+public class WebConfig {
     @Bean
     public ReactorResourceFactory resourceFactory() {
         ReactorResourceFactory factory = new ReactorResourceFactory();

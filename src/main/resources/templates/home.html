@@ -235,6 +235,18 @@
 
     }
 
+    .icon-image {
+        width: 24px; /* 원하는 너비로 조정 */
+        height: 24px; /* 원하는 높이로 조정 */
+        vertical-align: middle; /* 이미지와 텍스트를 중간에 정렬 */
+    }
+
+
+    .material-icons, .material-icons-outlined {
+        font-size: 24px; /* 아이콘 크기 조정 */
+        vertical-align: middle;
+    }
+
 
 </style>
 
@@ -258,13 +270,10 @@
                                                        class="material-icons">home</span></a>
             <span style="margin: 0 12px 0 12px;" class="material-icons-outlined">send</span>
             <span style="margin: 0 12px 0 12px;" class="material-icons-outlined">favorite_border</span>
-            <span style="margin: 0 12px 0 12px;" class="material-icons-outlined">boarder</span>
-
+            <img class="icon-image" src="/write.png" alt="아이콘">
 
             <div class="mini-profile" style="float: right; margin-left: 10px;">
-                <a href="./photo/일반.jpg">
-                    <img class="profile" style="margin-bottom: 6px;"
-                                                                src="./photo/일반.jpg" alt="프로필 이미지"></a>
+                    <img class="profile" style="margin-bottom: 6px;" src="/normal.jpg" alt="프로필 이미지">
             </div>
         </div>
     </div>
@@ -348,7 +357,7 @@
                 <div style="display:flex; flex-direction: row; justify-content: center; margin-left: -10px; margin-top: 10px; border-top: solid 1px #dbdbdb;">
                     <span style="margin-left: 8px; margin-top: 7px;" class="material-symbols-outlined">mood</span>
                     <input type="email" class="form-control"
-                           style="box-shadow: none; border: none; border-radius: 0px;" id="exampleFormControlInput1"
+                           style="box-shadow: none; border: none; border-radius: 0px;"
                            placeholder="댓글 달기 ...">
                     <a href="#"
                        style="width: 50px; margin-right: 8px; margin-top: 7px; text-decoration: none; color: cornflowerblue; font-weight: bold">
@@ -373,7 +382,7 @@
                 </div>
             </div>
         <div style="margin-top: 10px;">
-            <img src=./photo/판게시.PNG style="max-width: 100%; height: auto" alt="게시판이미지">
+            <img src="판게시.PNG" style="max-width: 100%; height: auto" alt="게시판이미지">
 
         </div>
 
@@ -413,11 +422,10 @@
             <div style="align-items: center; display: flex;">
                 <div class="left-profile" style="">
                     <a href="../profilepage/instaprofile.html"><img class="profile"
-                                                                     src="http://localhost:8080/photo/일반.jpg" alt ="프로필 이미지"></a>
+                                                                     src="/normal.jpg" alt ="프로필 이미지"></a>
                 </div>
                 <div style="margin-left: 10px; font-weight: bold; font-size: 12px; margin-top: 10px;">
-                    <p th:text="${myName}">TestName</p>
-                    <p style="font-size: 13px; color: grey; font-weight: lighter;">서강준</p>
+                    <p style="font-size: 13px; color: grey; font-weight: lighter;" th:text="${nick_name}">사용자이름</p>
                 </div>
                 <div style="margin-left: 44.1%; font-size: 12px;">
                     <button style="background: none; border: none; color: cornflowerblue">전환</button>

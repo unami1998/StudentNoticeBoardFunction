@@ -4,6 +4,7 @@ import com.example.demo.dto.*;
 import com.example.demo.dto.Response.KakaoUserInfoResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -68,5 +70,23 @@ public class StudentController {
 
         return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
+
+    @GetMapping("/passwordFind")
+    public String showPasswordFindForm() {
+        return "passwordFind"; // 여기서 'passwordFind'는 HTML 파일 이름에 해당합니다
+    }
+
+    @PostMapping("/findPassword")
+    public String findPassword(String email,Model model) throws MessagingException, UnsupportedEncodingException {
+        //Email이 db에 없는 비밀번호면 오류
+        long findPassword = studentService.findPassword(email);
+        if(findPassword ==-1){
+            model.addAttribute("findModal", true);
+        }
+
+        return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
+    }
+
+
 }
 
