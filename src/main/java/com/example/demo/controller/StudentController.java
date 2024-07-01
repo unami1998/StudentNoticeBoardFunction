@@ -45,18 +45,18 @@ public class StudentController {
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         Model model) {
-        long loginResult = studentService.login(email, password);
-        if (loginResult == -1) {
+        String loginResult = studentService.login(email, password);
+        if (loginResult.equals(" ")) {
             System.out.println("로그인 실패");
             model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
-        if (loginResult == -2) {
-            System.out.println("비밀번호 틀림");
-            model.addAttribute("showModal", true);
-            return "index"; // 로그인 페이지로 다시 돌아감
-        }
-
+//        if (loginResult == -2) {
+//            System.out.println("비밀번호 틀림");
+//            model.addAttribute("showModal", true);
+//            return "index"; // 로그인 페이지로 다시 돌아감
+//        }
+        model.addAttribute("nick_name",loginResult);
         return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 
@@ -65,7 +65,7 @@ public class StudentController {
     public String createStudent(StudentDTO joinStudent,
                         Model model) {
         studentService.join(joinStudent);
-        model.addAttribute("myName", true);
+        model.addAttribute("myName", joinStudent.getName());
 
 
         return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트

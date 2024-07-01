@@ -41,15 +41,16 @@ public class StudentService {
             throw new DuplicateFormatFlagsException("이미 존재하는 이름");
         }
     }
-    public long login(String email, String password) {
+    public String login(String email, String password) {
         Student student = studentRepository.findByEmailAndPassword(email,password);
         if(student ==null){
-            return -1;
+            return " ";
         }
         if(!student.getPassword().equals(password)){
-            return -2;
+            return " ";
         }
-        return 1;
+
+        return student.getName();
     }
 
 

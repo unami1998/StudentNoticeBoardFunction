@@ -1,32 +1,58 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BoardDTO;
 import com.example.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/board")
 public class boardController {
     @Autowired
     private BoardService boardService;
-
-    @GetMapping("/save")
-    public String saveForm() {
-        System.out.println("test");
-        return "save";
+    @GetMapping("/writePage")
+    public String writeForm() {
+        return "writePage"; // login.html 템플릿 반환
     }
-//    @PostMapping("/save")
-//    public String boardWritePro(String title, String content) { // @RequestBody 제거
-//        System.out.println("제목: " + title); // getContent()를 사용하여 내용을 출력해야 합니다.
-//        boardService.save(title, content);
-//        return "redirect:/board/paging";
-//    }
+
+    @PostMapping("/writeSave")
+    public String boardWritePro(String title, String content, @RequestParam("file") MultipartFile file, Model model) { // @RequestBody 제거
+//        long boardResult = boardService.writeBoard(title, content);
+        if (title == null || title.isEmpty() || content == null || content.isEmpty()) {
+            model.addAttribute("showModal", true); // 모달 표시
+            return "writePage"; // 입력 페이지로 다시 돌아감
+        }
+
+        String filePath = null;
+        try {
+            if (!file.isEmpty()) {
+                String fileName = file.getOriginalFilename();
+                // 파일을 저장할 경로 설정
+                filePath = "C:\\uploads\\" + fileName;
+                File destinationFile = new File(filePath);
+
+                // 디렉토리가 존재하지 않으면 생성
+                File parentDir = destinationFile.getParentFile();
+                if (!parentDir.exists()) {
+                    parentDir.mkdirs();
+                }
+
+                file.transferTo(destinationFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("showModal3", true);
+            return "writePage";
+        }
+        boardService.save(title, content, filePath);
+        return "home";
+    }
+
 
 //    // @PageableDefault(page = 1) : page는 기본으로 1페이지를 보여준다.
 //    @GetMapping("/paging")

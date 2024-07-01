@@ -11,13 +11,9 @@ public class BoardDTO {
     private int id;
     private String title;
     private String content;
+    private String filePath;
+
     public BoardDTO() {
-        this.id=id;
-        this.title=title;
-        this.content=getContent();
-    }
-    public BoardDTO(String title, String content) {
-        this.title=title;
-        this.content=content;
+
     }
 }
