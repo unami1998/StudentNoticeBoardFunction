@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.BoardDTO;
+import com.example.demo.entity.Board;
 import com.example.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,12 +11,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/board")
 public class boardController {
     @Autowired
     private BoardService boardService;
+
+    @GetMapping("/home")
+    public String home(Model model){
+        List<BoardDTO> boards = boardService.getAllBoards();
+        model.addAttribute("boards", boards);
+        return "home";
+    }
+
+
+
+
     @GetMapping("/writePage")
     public String writeForm() {
         return "writePage"; // login.html 템플릿 반환

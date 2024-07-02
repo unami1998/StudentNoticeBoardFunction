@@ -108,19 +108,99 @@
 <script th:inline="javascript">
     const modal = document.querySelector('.modal');
     const modalClose = document.querySelector('.close_btn');
-    const boardForm = document.getElementById('boardForm'); // 폼 요소 가져오기
+    const boardForm = document.getElementById('boardForm');
 
     modalClose.addEventListener('click', function () {
         modal.style.display = 'none';
     });
 
-    document.addEventListener("DOMContentLoaded", function (){
+    document.addEventListener("DOMContentLoaded", function () {
         var showModal = /*[[${showModal}]]*/ false;
 
-        if (showModal &&modal) {
+        if (showModal && modal) {
             modal.style.display = 'block';
         }
+
+        // 폼 제출 이벤트 핸들러 추가
+        boardForm.addEventListener('submit', function (e) {
+            e.preventDefault(); // 기본 폼 제출 동작 방지
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!title || !content) {
+                modal.style.display = 'block';
+                return;
+            }
+
+            const formData = new FormData(boardForm);
+            fetch(boardForm.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addFeed(title, content, data.file);
+                        boardForm.reset();
+                    } else {
+                        alert('Error posting your feed');
+                    }
+                });
+        });
     });
+    function addFeed(title, content, imageUrl) {
+        const feedContainer = document.createElement('div');
+        feedContainer.className = 'cLayer';
+        feedContainer.style = 'max-width: 600px; width: 100%; max-height: 3000px; height: 100%; position: relative; font-size: 13px; font-weight: bold;';
+        feedContainer.innerHTML = `
+            <div class="feed-box">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 2%; margin-left: 1%; margin-bottom: 2%;">
+                    <div style="display: flex; align-items: center">
+                        <div class="box-profile">
+                            <a href=""><img class="profile" src="https://blog.kakaocdn.net/dn/b0ZMMh/btq4eKTyBG4/aVgQqfsq543UByfJSaK0cK/img.jpg"></a>
+                        </div>
+                        <div style="margin-left: 10px">BoYoung</div>
+                    </div>
+                    <div>
+                        <button id="open-modal" class="btn-open-popup" style="border: none; background-color: white;">
+                            <span class="material-icons-outlined" style="margin-right: 15px;">more_horiz</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false" data-bs-interval="false" style="height: 600px;">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="${imageUrl}" class="d-block w-100 feed-picture" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div style="margin-top: 2%; display: flex; flex-direction: row; justify-content: space-between;">
+                    <div style="margin-left: 10px;">
+                        <span class="material-icons-outlined">favorite_border</span>
+                        <span class="material-icons-outlined">mode_comment</span>
+                        <span class="material-icons-outlined">send</span>
+                        <span class="material-icons-outlined">boarder</span>
+                    </div>
+                    <div style="margin-right: 10px;">
+                        <span class="material-icons-outlined">bookmark_border</span>
+                    </div>
+                </div>
+                <div style="margin-left: 10px;">
+                        <input type="email" class="form-control" style="box-shadow: none; border: none; border-radius: 0px;" placeholder="댓글 달기 ...">
+                        <a href="#" style="width: 50px; margin-right: 8px; margin-top: 7px; text-decoration: none; color: cornflowerblue; font-weight: bold">게시</a>
+                </div>
+            </div>
+        `;
+        document.getElementById('feedContainer').appendChild(feedContainer);
+    }
 
 </script>
 </body>

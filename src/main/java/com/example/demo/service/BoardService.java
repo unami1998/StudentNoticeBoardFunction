@@ -30,20 +30,20 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public List<BoardDTO> viewList() {
-        ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
-        List<Board> boardList = boardRepository.findAll(); // 실제로 데이터베이스에서 게시물 목록을 가져옴
-        BoardDTO boardDTO;
-        for (Board board : boardList) {
-            boardDTO = new BoardDTO();
-            boardDTO.setId(board.getId()); // id 속성 설정
-            boardDTO.setTitle(board.getTitle());
-            boardDTO.setContent(board.getContent());
-            boardDTOList.add(boardDTO);
-        }
-        System.out.println("test all " + boardRepository.findAll());
-        return boardDTOList;
-    }
+//    public List<BoardDTO> viewList() {
+//        ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
+//        List<Board> boardList = boardRepository.findAll(); // 실제로 데이터베이스에서 게시물 목록을 가져옴
+//        BoardDTO boardDTO;
+//        for (Board board : boardList) {
+//            boardDTO = new BoardDTO();
+//            boardDTO.setId(board.getId()); // id 속성 설정
+//            boardDTO.setTitle(board.getTitle());
+//            boardDTO.setContent(board.getContent());
+//            boardDTOList.add(boardDTO);
+//        }
+//        System.out.println("test all " + boardRepository.findAll());
+//        return boardDTOList;
+//    }
 
 
     public Page<BoardDTO> getBoard(Pageable pageable) {
@@ -58,6 +58,22 @@ public class BoardService {
                 return newBoardDTO;
             }
         });
+    }
+
+    public List<BoardDTO> getAllBoards() {
+
+        List<Board> boardList = boardRepository.findAll(); // 실제로 데이터베이스에서 게시물 목록을 가져옴
+        List<BoardDTO> boardDTOList = new ArrayList<>();
+        for (Board board : boardList) {
+            BoardDTO boardDTO= new BoardDTO();
+            boardDTO.setId(board.getId()); // id 속성 설정
+            boardDTO.setTitle(board.getTitle());
+            boardDTO.setContent(board.getContent());
+            boardDTO.setFilePath(board.getFilePath());
+            boardDTOList.add(boardDTO);
+        }
+        System.out.println("test all " + boardRepository.findAll());
+        return boardDTOList;
     }
 
 
