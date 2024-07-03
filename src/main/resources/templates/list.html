@@ -9,13 +9,12 @@
     <tr>
         <th>id</th>
         <th>title</th>
-        <th>writer</th>
-        <th>date</th>
-        <th>hits</th>
+        <th>content</th>
     </tr>
-    <tr th:each="board: ${boardList}">
-        <td th:text="${board.id}"></td>
-        <td><a th:href="@{|/board/${board.id}|}" th:text="${board.title}"></a></td>
+    <tr th:each="boardDto : ${boards}">
+        <td th:text="${boardDto.id}"></td>
+        <td th:text="${boardDto.title}"></td>
+        <td th:text="${boardDto.content}"></td>
     </tr>
 </table>
 </body>

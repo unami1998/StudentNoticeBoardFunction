@@ -311,11 +311,18 @@
 <div class="container" style="margin-top: 100px;">
 
     <!-- 게시물 목록 -->
-    <div th:each="boardDto : ${boards}" class="board-item">
-        <h2 th:text="${boardDto.title}"></h2>
-        <p th:text="${boardDto.content}"></p>
-        <hr>
-    </div>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>content</th>
+        </tr>
+        <tr th:each="boardDto : ${boards}">
+            <td th:text="${boardDto.id}"></td>
+            <td th:text="${boardDto.title}"></td>
+            <td th:text="${boardDto.content}"></td>
+        </tr>
+    </table>
 
 </div>
 <div class="bLayer"
