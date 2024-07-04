@@ -46,19 +46,19 @@ public class BoardService {
 //    }
 
 
-    public Page<BoardDTO> getBoard(Pageable pageable) {
-        Page<Board> boardPage = boardRepository.findAll(pageable);
-        return boardPage.map(new Function<Board, BoardDTO>() {
-            @Override
-            public BoardDTO apply(Board board) {
-                BoardDTO newBoardDTO = new BoardDTO();
-                newBoardDTO.setContent(board.getContent());
-                newBoardDTO.setTitle(board.getTitle());
-                newBoardDTO.setId(board.getId());
-                return newBoardDTO;
-            }
-        });
-    }
+//    public Page<BoardDTO> getBoard(Pageable pageable) {
+//        Page<Board> boardPage = boardRepository.findAll(pageable);
+//        return boardPage.map(new Function<Board, BoardDTO>() {
+//            @Override
+//            public BoardDTO apply(Board board) {
+//                BoardDTO newBoardDTO = new BoardDTO();
+//                newBoardDTO.setContent(board.getContent());
+//                newBoardDTO.setTitle(board.getTitle());
+//                newBoardDTO.setId(board.getId());
+//                return newBoardDTO;
+//            }
+//        });
+//    }
 
     public List<BoardDTO> getAllBoards() {
 

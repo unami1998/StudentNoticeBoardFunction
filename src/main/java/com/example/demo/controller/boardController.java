@@ -19,15 +19,20 @@ public class boardController {
     @Autowired
     private BoardService boardService;
 
-    @GetMapping("/home")
-    public String home(Model model){
-        List<BoardDTO> boards = boardService.getAllBoards();
-        model.addAttribute("boards", boards);
-        return "home";
+    @PostMapping("/search")
+    public String search(String input, Model model){
+
+
+        return "작업중";
     }
 
 
-
+    @GetMapping("/home")
+    public String home(Model model){
+        List<BoardDTO> boards  = boardService.getAllBoards();
+        model.addAttribute("boards", boards);
+        return "home";
+    }
 
     @GetMapping("/writePage")
     public String writeForm() {
