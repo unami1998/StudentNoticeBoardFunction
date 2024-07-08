@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -57,7 +58,8 @@ public class boardController {
             if (!file.isEmpty()) {
                 String fileName = file.getOriginalFilename();
                 // 파일을 저장할 경로 설정
-                filePath = "C:\\uploads\\" + fileName;
+                String uploadPath = Paths.get("src", "main", "resources", "static").toString();
+                filePath = uploadPath + File.separator + fileName;
                 File destinationFile = new File(filePath);
 
                 // 디렉토리가 존재하지 않으면 생성

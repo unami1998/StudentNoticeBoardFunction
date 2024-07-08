@@ -343,6 +343,7 @@
             <th>id</th>
             <th>title</th>
             <th>content</th>
+            <th>file</th>
             <th>love</th>
         </tr>
         </thead>
@@ -351,6 +352,9 @@
             <td th:text="${boardDto.id}"></td>
             <td th:text="${boardDto.title}"></td>
             <td th:text="${boardDto.content}"></td>
+            <td>
+                <img th:src="@{${boardDto.filePath}}" style="max-width: 100px; max-height: 100px;" />
+            </td>
             <td>
                 <span style="margin: 0 12px 0 12px; cursor: pointer;"
                       class="material-icons-outlined"
