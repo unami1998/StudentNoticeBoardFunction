@@ -109,7 +109,14 @@
         max-width: 100%;
         min-height: 480px;
         margin-top: 100px; /* 네비게이션 바의 높이만큼 여백 추가 */
-        z-index: 900; /* 컨테이너의 z-index를 네비게이션 바보다 낮게 설정 */
+        /* 컨테이너의 z-index를 네비게이션 바보다 낮게 설정 */
+    }
+    .dropdown-menu {
+        position: absolute;
+        top: 100%; /* 검색창 아래에 위치 */
+        left: 0;
+        width: 100%;
+        z-index: 1; /* .container의 z-index보다 높은 값으로 설정 */
     }
 
 
@@ -271,8 +278,13 @@
                                                       src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png">
         </a>
         <!--            검색창-------------------------------------------------------------------------------------->
-        <input class="form-control me-2 aLayer" style="max-width: 300px;" type="search" placeholder="검색"
-               aria-label="Search">
+        <form id="searchForm">
+            <div class="input-group mb-3">
+                <input id="searchInput" class="form-control me-2 aLayer" style="max-width: 300px;" type="search"
+                       placeholder="검색" aria-label="Search" name="input">
+                <div class="dropdown-menu" id="searchDropdown" style="width: 100%;top: 40px" aria-labelledby="dropdownMenuButton"></div>
+            </div>
+        </form>
         <div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
             <!--            아이콘---------------------------------------------------------------------------------->
             <a href="home.html"><span style="margin: 6px 12px 0 12px;"
@@ -289,38 +301,17 @@
     </div>
 </nav>
 
-<div class="container" style="margin-top: 100px;">
-    <!-- 게시물 목록 -->
-    <table>
-        <thead>
-        <tr>
-            <th>id</th>
-            <th>title</th>
-            <th>content</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="boardDto : ${boards}">
-            <td th:text="${boardDto.id}"></td>
-            <td th:text="${boardDto.title}"></td>
-            <td th:text="${boardDto.content}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-</div>
-
 <div class="bLayer"
-     style=" max-width: 350px; width: 100%; max-height: 800px; height: 100%; position:sticky; top: 85px; margin-left: 24px;">
+     style="max-width: 350px; width: 100%; max-height: 800px; height: 100%; position: sticky; top: 85px; margin-left: 24px; float: right; margin-right: 24px;">
     <div style="margin-top: 10px; margin-left: 1%; margin-bottom: 2%;">
-        <!--            내 프로필 부분----------------------------------------------------------------------------------->
+        <!-- 내 프로필 부분----------------------------------------------------------------------------------->
         <div style="align-items: center; display: flex;">
             <div class="left-profile" style="">
                 <a href="../profilepage/instaprofile.html"><img class="profile"
                                                                 src="/normal.jpg" alt="프로필 이미지"></a>
             </div>
             <div style="margin-left: 10px; font-weight: bold; font-size: 12px; margin-top: 10px;">
-                <p style="font-size: 13px; color: grey; font-weight: lighter;" th:text="${nick_name}">사용자이름</p>
+                <p style="font-size: 13px; color: grey; font-weight: lighter;" th:text="${param.nick_name}">사용자이름</p>
             </div>
             <div style="margin-left: 44.1%; font-size: 12px;">
                 <button style="background: none; border: none; color: cornflowerblue">전환</button>
@@ -342,6 +333,34 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="container" style="margin-top: 100px;">
+    <!-- 게시물 목록 -->
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>content</th>
+            <th>love</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boardDto : ${boards}">
+            <td th:text="${boardDto.id}"></td>
+            <td th:text="${boardDto.title}"></td>
+            <td th:text="${boardDto.content}"></td>
+            <td>
+                <span style="margin: 0 12px 0 12px; cursor: pointer;"
+                      class="material-icons-outlined"
+                      th:data-id="${boardDto.id}"
+                      onclick="incrementFavorite(this)">favorite_border</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
 </div>
 
 <!--                사진 아래 아이콘--------------------------------------------------------------------->
@@ -381,6 +400,51 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#searchInput').on('input', function() {
+            var inputValue = $(this).val().trim();
+            if (inputValue.length > 0) {
+                $.ajax({
+                    url: '/board/searchResults',
+                    method: 'GET',
+                    data: { input: inputValue },
+                    success: function(response) {
+                        var dropdownMenu = $('#searchDropdown');
+                        dropdownMenu.empty();
+
+                        // 검색 결과가 배열 형태인 경우
+                        if (Array.isArray(response)) {
+                            response.forEach(function(item) {
+                                dropdownMenu.append('<a class="dropdown-item" href="#">' + item.title + '</a>');
+                            });
+                        }
+
+                        dropdownMenu.show();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $('#searchDropdown').hide();
+            }
+        });
+    });
+
+
+    function incrementFavorite(element) {
+        var boardId = $(element).attr("data-id");
+        $.ajax({
+            url: '/board/' + boardId + '/favorite',
+            type: 'POST',
+            success: function(response) {
+                alert("Favorite count incremented");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
     document.addEventListener("DOMContentLoaded", function() {
         const buttonOpenModal = document.getElementById("open-modal");
 

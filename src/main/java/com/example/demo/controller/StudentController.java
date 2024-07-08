@@ -5,6 +5,7 @@ import com.example.demo.dto.Response.KakaoUserInfoResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
@@ -43,6 +44,8 @@ public class StudentController {
 
     @PostMapping("/login")
     public String login(@RequestParam String email,
+                        RedirectAttributes redirectAttributes,
+                        HttpSession session,
                         @RequestParam String password,
                         Model model) {
         String loginResult = studentService.login(email, password);
@@ -51,13 +54,11 @@ public class StudentController {
             model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
-//        if (loginResult == -2) {
-//            System.out.println("비밀번호 틀림");
-//            model.addAttribute("showModal", true);
-//            return "index"; // 로그인 페이지로 다시 돌아감
-//        }
-        model.addAttribute("nick_name",loginResult);
-        return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
+        session.setAttribute("nick_name", loginResult);
+        redirectAttributes.addAttribute("nick_name", loginResult); // URL 파라미터로 전달
+
+        //model.addAttribute("nick_name",loginResult);
+        return "redirect:/board/home"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 
 

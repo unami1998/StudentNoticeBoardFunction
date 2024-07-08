@@ -34,6 +34,9 @@ public class Student {
         this.pointCount = 0;
     }
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Board> boards = new ArrayList<>();
+
     @OneToMany
     @JoinColumn(name = "student")
     private List<Item> item;

@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.BoardDTO;
-import com.example.demo.entity.Board;
+import com.example.demo.dto.BoardsearchDTO;
 import com.example.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,16 @@ import java.util.List;
 public class boardController {
     @Autowired
     private BoardService boardService;
+    @PostMapping("/{id}/favorite")
+    public ResponseEntity<String> incrementFavorite(@PathVariable Long id) {
+        boardService.incrementFavorite(id);
+        return ResponseEntity.ok("Favorite count incremented");
+    }
 
-    @PostMapping("/search")
-    public String search(String input, Model model){
-
-
-        return "작업중";
+    @GetMapping("/searchResults")
+    public ResponseEntity<List<BoardsearchDTO>> search(@RequestParam String input, Model model){
+        List<BoardsearchDTO> searchResults = boardService.searchInputString(input);
+        return ResponseEntity.ok(searchResults);
     }
 
 

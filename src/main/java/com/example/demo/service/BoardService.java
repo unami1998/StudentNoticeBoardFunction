@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.BoardDTO;
+import com.example.demo.dto.BoardsearchDTO;
 import com.example.demo.entity.Board;
+import com.example.demo.entity.Student;
 import com.example.demo.repository.BoardRepository;
+import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,8 @@ import java.util.function.Function;
 public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
     public void save(String title, String content, String filePath) {
         BoardDTO boardDTO = new BoardDTO();
@@ -28,6 +33,19 @@ public class BoardService {
         board.setContent(boardDTO.getContent());
         board.setFilePath(boardDTO.getFilePath());
         boardRepository.save(board);
+    }
+
+    public List<BoardsearchDTO> searchInputString(String input) {
+        List<Board> boardList = boardRepository.findByContentOrTitleContaining(input);
+        List<BoardsearchDTO> boardDTOList = new ArrayList<>();
+        for (Board board : boardList) {
+            BoardsearchDTO boardsearchDTO = new BoardsearchDTO();
+            boardsearchDTO.setTitle(board.getTitle());
+            boardsearchDTO.setContent(board.getContent());
+            boardDTOList.add(boardsearchDTO);
+        }
+        return boardDTOList;
+
     }
 
 //    public List<BoardDTO> viewList() {
@@ -74,6 +92,17 @@ public class BoardService {
         }
         System.out.println("test all " + boardRepository.findAll());
         return boardDTOList;
+    }
+
+    public void incrementFavorite(Long id) {
+        List<Board> boards = boardRepository.findByStudentId(id);
+        for(Board board : boards){
+            Student student = board.getStudent();
+            if(student != null){
+                student.setPointCount(student.getPointCount()+1);
+                studentRepository.save(student);
+            }
+        }
     }
 
 
