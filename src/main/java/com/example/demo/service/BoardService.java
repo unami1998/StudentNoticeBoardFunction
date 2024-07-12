@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -22,11 +23,11 @@ public class BoardService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public void save(String title, String content, String filePath) {
+    public void save(String title, String content, Path filePath) {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setTitle(title);
         boardDTO.setContent(content);
-        boardDTO.setFilePath(filePath);
+        boardDTO.setFilePath(filePath.toString());
 
         Board board = new Board();
         board.setTitle(boardDTO.getTitle());

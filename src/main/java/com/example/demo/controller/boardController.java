@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import java.util.List;
 
 @Controller
@@ -47,36 +51,41 @@ public class boardController {
 
     @PostMapping("/writeSave")
     public String boardWritePro(String title, String content, @RequestParam("file") MultipartFile file, Model model) { // @RequestBody 제거
-//        long boardResult = boardService.writeBoard(title, content);
         if (title == null || title.isEmpty() || content == null || content.isEmpty()) {
             model.addAttribute("showModal", true); // 모달 표시
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
 
-        String filePath = null;
+        if(file.isEmpty()){
+            model.addAttribute("showModal3", true);
+            return "writePage"; // 입력 페이지로 다시 돌아감
+        }
         try {
-            if (!file.isEmpty()) {
-                String fileName = file.getOriginalFilename();
-                // 파일을 저장할 경로 설정
-                String uploadPath = Paths.get("src", "main", "resources", "static").toString();
-                filePath = uploadPath + File.separator + fileName;
-                File destinationFile = new File(filePath);
+            String uploadDir = "src/main/resources/static";
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
-                // 디렉토리가 존재하지 않으면 생성
-                File parentDir = destinationFile.getParentFile();
-                if (!parentDir.exists()) {
-                    parentDir.mkdirs();
-                }
+            // 정규화된 파일 이름 가져오기
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-                file.transferTo(destinationFile);
+            // 파일 경로 설정
+            Path filePath = uploadPath.resolve(fileName);
+            File destinationFile = filePath.toFile();
+            // 디렉토리가 존재하지 않으면 생성
+            if (!destinationFile.getParentFile().exists()) {
+                destinationFile.getParentFile().mkdirs();
             }
+            // 파일 저장
+            file.transferTo(destinationFile);
+            System.out.print("filePath" + filePath);
+            // 파일 저장 후 서비스에 저장 요청
+            boardService.save(title, content, filePath);
+
+            return "home"; // 파일 저장 후 메인 페이지로 리다이렉트
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("showModal3", true);
-            return "writePage";
+            return "home";
         }
-        boardService.save(title, content, filePath);
-        return "home";
     }
 
 
