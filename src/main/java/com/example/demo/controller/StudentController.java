@@ -21,21 +21,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
-    /*
-조회할 때 회원명 얼룩이 할 때
-
-얼
-  룩이
-  곰이
-  고라몽
-
-이런 거 기술 여튼 이런식으로 하는거 구현
-
-
-*/
-
     @Autowired
     private StudentService studentService;
+
+    @GetMapping("/allStudent")
+    public String allStudent(Model model) {
+        List<StudentDTO> students = studentService.getAllMembers();
+        model.addAttribute("students", students);
+        return "allStudent";
+    }
+
+    @GetMapping("/myProfile")
+    public String myprofileForm() {
+        return "myProfile"; // login.html 템플릿 반환
+    }
 
     @GetMapping("/loginPage")
     public String loginForm() {
@@ -48,14 +47,15 @@ public class StudentController {
                         HttpSession session,
                         @RequestParam String password,
                         Model model) {
-        String loginResult = studentService.login(email, password);
-        if (loginResult.equals(" ")) {
+        MyAccountInfoDTO loginResult = studentService.login(email, password);
+        if (loginResult == null || loginResult.getNickName().trim().isEmpty()) {
             System.out.println("로그인 실패");
             model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
-        session.setAttribute("nick_name", loginResult);
-        redirectAttributes.addAttribute("nick_name", loginResult); // URL 파라미터로 전달
+        session.setAttribute("currentUser", loginResult);
+        String nickName = loginResult.getNickName();
+        redirectAttributes.addAttribute("nick_name", nickName); // URL 파라미터로 전달
 
         //model.addAttribute("nick_name",loginResult);
         return "redirect:/board/home"; // 로그인 성공 시 홈 페이지로 리다이렉트
@@ -64,7 +64,7 @@ public class StudentController {
 
     @PostMapping("/createStudent")
     public String createStudent(StudentDTO joinStudent,
-                        Model model) {
+                                Model model) {
         studentService.join(joinStudent);
         model.addAttribute("myName", joinStudent.getName());
 
@@ -78,16 +78,14 @@ public class StudentController {
     }
 
     @PostMapping("/findPassword")
-    public String findPassword(String email,Model model) throws MessagingException, UnsupportedEncodingException {
+    public String findPassword(String email, Model model) throws MessagingException, UnsupportedEncodingException {
         //Email이 db에 없는 비밀번호면 오류
         long findPassword = studentService.findPassword(email);
-        if(findPassword ==-1){
+        if (findPassword == -1) {
             model.addAttribute("findModal", true);
         }
 
         return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
-
-
 }
 

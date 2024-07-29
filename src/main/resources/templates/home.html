@@ -16,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
-    <title>UIclone</title>
+    <title>개인포트폴리오</title>
 </head>
 <style>
     /*메뉴바 우측 상단 미니프로필*/
@@ -274,7 +274,7 @@
      style="position: fixed; display: flex; flex-direction: row; width: 100%; border-bottom: solid 1px #dbdbdb; background-color: #ffffff;z-index: 1;">
     <div class="container-fluid" style="justify-content: space-between; flex-wrap: nowrap; max-width: 940px;">
         <!--        instagram 이미지-------------------------------------------------------------------------------->
-        <a class="navbar-brand" href="home.html"><img style="width: 100px;"
+        <a class="navbar-brand" href="home"><img style="width: 100px;"
                                                       src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png">
         </a>
         <!--            검색창-------------------------------------------------------------------------------------->
@@ -289,7 +289,7 @@
             <!--            아이콘---------------------------------------------------------------------------------->
             <a href="home.html"><span style="margin: 6px 12px 0 12px;"
                                       class="material-icons">home</span></a>
-            <span style="margin: 0 12px 0 12px;" class="material-icons-outlined">send</span>
+            <a href="/student/allStudent"><span style="margin: 0 12px 0 12px;" class="material-icons-outlined">send</span></a>
             <span style="margin: 0 12px 0 12px;" class="material-icons-outlined">favorite_border</span>
             <a href="/board/writePage">
                 <img class="icon-image" src="/write.png" alt="아이콘">
@@ -307,7 +307,7 @@
         <!-- 내 프로필 부분----------------------------------------------------------------------------------->
         <div style="align-items: center; display: flex;">
             <div class="left-profile" style="">
-                <a href="../profilepage/instaprofile.html"><img class="profile"
+                <a href="/student/myProfile"><img class="profile"
                                                                 src="/normal.jpg" alt="프로필 이미지"></a>
             </div>
             <div style="margin-left: 10px; font-weight: bold; font-size: 12px; margin-top: 10px;">
@@ -354,9 +354,7 @@
             <td th:text="${boardDto.title}"></td>
             <td th:text="${boardDto.content}"></td>
             <td>
-                <img th:src="@{${boardDto.filePath}}" style="max-width: 100px; max-height: 100px;" />
-                <img th:src="@{/static/${boardDto.filePath}}" style="max-width: 100px; max-height: 100px;" />
-
+                <img th:src="@{${boardDto.getFilePath()}}" style="max-width: 100px; max-height: 100px;" />
             </td>
             <td>
                 <span style="margin: 0 12px 0 12px; cursor: pointer;"
@@ -417,7 +415,12 @@
                         // 검색 결과가 배열 형태인 경우
                         if (Array.isArray(response)) {
                             response.forEach(function(item) {
-                                dropdownMenu.append('<a class="dropdown-item" href="#">' + item.title + '</a>');
+                                var dropdownItem = $('<a class="dropdown-item" href="#">' + item.title + '</a>');
+                                dropdownItem.on('click', function () {
+                                    $('#searchInput').val(item.title);
+                                    dropdownMenu.hide();
+                                })
+                                dropdownMenu.append(dropdownItem);
                             });
                         }
 

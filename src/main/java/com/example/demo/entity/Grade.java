@@ -9,5 +9,4 @@ public enum Grade {
     JUNIOR,
     SENIOR
 
-    
 }

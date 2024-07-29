@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.controller.MailService;
+import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.Optional;
@@ -41,16 +43,19 @@ public class StudentService {
             throw new DuplicateFormatFlagsException("이미 존재하는 이름");
         }
     }
-    public String login(String email, String password) {
+    public MyAccountInfoDTO login(String email, String password) {
         Student student = studentRepository.findByEmailAndPassword(email,password);
         if(student ==null){
-            return " ";
+            return null;
         }
         if(!student.getPassword().equals(password)){
-            return " ";
+            return null;
         }
+        MyAccountInfoDTO myAccountInfoDTO = new MyAccountInfoDTO();
+        myAccountInfoDTO.setNickName(student.getNickName());
+        myAccountInfoDTO.setEmail(student.getEmail());
 
-        return student.getName();
+        return myAccountInfoDTO;
     }
 
 
@@ -64,9 +69,17 @@ public class StudentService {
         return 1;
     }
 
-    public List<Student> getAllMembers() {
-        System.out.print("studentList:" + studentRepository.findAll());
-        return studentRepository.findAll();
+    public List<StudentDTO> getAllMembers() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for(Student student : students){
+            StudentDTO dto = new StudentDTO();
+            dto.setName(student.getName());
+            dto.setEmail(student.getEmail());
+            studentDTOS.add(dto);
+        }
+
+        return studentDTOS;
     }
 
     public StudentDTO myInfo(Long id) {

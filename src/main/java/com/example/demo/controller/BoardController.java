@@ -1,8 +1,11 @@
 package com.example.demo.controller;
 
+
 import com.example.demo.dto.BoardDTO;
 import com.example.demo.dto.BoardsearchDTO;
+import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,11 +22,16 @@ import java.nio.file.Paths;
 
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/board")
-public class boardController {
+public class BoardController {
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private StudentController studentController;
+
     @PostMapping("/{id}/favorite")
     public ResponseEntity<String> incrementFavorite(@PathVariable Long id) {
         boardService.incrementFavorite(id);
@@ -36,6 +44,11 @@ public class boardController {
         return ResponseEntity.ok(searchResults);
     }
 
+    @GetMapping("/ten_minit_lover")
+    public String lover(Model model){
+        String lover = boardService.tenMinitLover();
+        return lover;
+    }
 
     @GetMapping("/home")
     public String home(Model model){
@@ -50,41 +63,51 @@ public class boardController {
     }
 
     @PostMapping("/writeSave")
-    public String boardWritePro(String title, String content, @RequestParam("file") MultipartFile file, Model model) { // @RequestBody 제거
+    public String boardWritePro(String title, String content,
+                                @RequestParam("file") MultipartFile file,
+                                HttpSession session,
+                                Model model) { // @RequestBody 제거
+        MyAccountInfoDTO currentUser = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
+            return "index"; // 로그인 페이지로 리다이렉트
+        }
         if (title == null || title.isEmpty() || content == null || content.isEmpty()) {
             model.addAttribute("showModal", true); // 모달 표시
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
 
-        if(file.isEmpty()){
-            model.addAttribute("showModal3", true);
-            return "writePage"; // 입력 페이지로 다시 돌아감
-        }
+        String filePathString = null;
         try {
-            String uploadDir = "src/main/resources/static";
-            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            if (!file.isEmpty()) { //파일이 있다
+                String uploadDir = "src/main/resources/static/uploads";
+                Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
-            // 정규화된 파일 이름 가져오기
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                // 정규화된 파일 이름 가져오기
+                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                // 파일 경로 설정
+                Path filePath = uploadPath.resolve(fileName);
+                File destinationFile = filePath.toFile();
+                // 디렉토리가 존재하지 않으면 생성
+                if (!destinationFile.getParentFile().exists()) {
+                    destinationFile.getParentFile().mkdirs();
+                }
+                // 파일 저장
+                file.transferTo(destinationFile);
+                filePathString = filePath.toString();
+                Path finalFilePath = Paths.get(filePathString);
+                Long userId = currentUser.getId();
 
-            // 파일 경로 설정
-            Path filePath = uploadPath.resolve(fileName);
-            File destinationFile = filePath.toFile();
-            // 디렉토리가 존재하지 않으면 생성
-            if (!destinationFile.getParentFile().exists()) {
-                destinationFile.getParentFile().mkdirs();
+                boardService.save(title, content, finalFilePath, userId);
+                // 파일 저장 후 서비스에 저장 요청
             }
-            // 파일 저장
-            file.transferTo(destinationFile);
-            System.out.print("filePath" + filePath);
-            // 파일 저장 후 서비스에 저장 요청
-            boardService.save(title, content, filePath);
-
-            return "home"; // 파일 저장 후 메인 페이지로 리다이렉트
-        } catch (IOException e) {
+            Long userId = currentUser.getId();
+            boardService.save(title, content, null, userId); //파일 없으면 null로 저장해
+            return "redirect:/home/board";
+        }catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("showModal3", true);
-            return "home";
+            return "writePage";
         }
     }
 

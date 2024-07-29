@@ -23,16 +23,26 @@ public class BoardService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public void save(String title, String content, Path filePath) {
+    public void save(String title, String content, Path filePath, Long userId) {
+      //  Student user = new Student();
+
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setTitle(title);
         boardDTO.setContent(content);
-        boardDTO.setFilePath(filePath.toString());
+        boardDTO.setId(userId);
+
+        if(filePath !=null){
+            boardDTO.setFilePath(filePath.toString());
+        }else{
+            boardDTO.setFilePath(null);
+        }
 
         Board board = new Board();
         board.setTitle(boardDTO.getTitle());
         board.setContent(boardDTO.getContent());
         board.setFilePath(boardDTO.getFilePath());
+        board.setId(boardDTO.getId());
+   //     board.setStudent(student);
         boardRepository.save(board);
     }
 
@@ -104,6 +114,10 @@ public class BoardService {
                 studentRepository.save(student);
             }
         }
+    }
+
+    public String tenMinitLover() {
+        return null;
     }
 
 
