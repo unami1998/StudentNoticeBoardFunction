@@ -3,9 +3,11 @@ package com.example.demo.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class MyAccountInfoDTO implements StudentAccount {
     private Long id;
     private String nickName;

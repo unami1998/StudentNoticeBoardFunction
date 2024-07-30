@@ -19,28 +19,20 @@ public class Student {
     private String nickName;
     private String email;
     private String password;
-
-
     private String address;
-
 
     @Enumerated(EnumType.STRING)
     private Grade grade;
-
     private int pointCount;
-
     public Student() {
         this.grade = Grade.FRESHMAN;
         this.pointCount = 0;
     }
-
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
-
     @OneToMany
     @JoinColumn(name = "student")
     private List<Item> item;
-
     public void increaseGrade() {
         this.pointCount ++;
 

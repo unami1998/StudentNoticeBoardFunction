@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<form action="/board/writeSave" method="post" enctype="multipart/form-data">
+<form id="boardForm" action="/board/writeSave" method="post" enctype="multipart/form-data">
     <table>
         <tr><td><h2>글쓰기</h2></td></tr>
         <tr><td class="header">Title</td></tr>
@@ -134,6 +134,7 @@
             }
 
             const formData = new FormData(boardForm);
+            FormData.append('userId', userId);
             fetch(boardForm.action, {
                 method: 'POST',
                 body: formData

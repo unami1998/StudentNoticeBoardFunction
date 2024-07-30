@@ -63,16 +63,16 @@ public class BoardController {
     }
 
     @PostMapping("/writeSave")
-    public String boardWritePro(String title, String content,
+    public String boardWritePro(@ModelAttribute BoardDTO boardDTO,
                                 @RequestParam("file") MultipartFile file,
                                 HttpSession session,
                                 Model model) { // @RequestBody 제거
-        MyAccountInfoDTO currentUser = (MyAccountInfoDTO) session.getAttribute("currentUser");
-        if (currentUser == null) {
+        MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        if (user == null || user.getId() ==0L) {
             model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
             return "index"; // 로그인 페이지로 리다이렉트
         }
-        if (title == null || title.isEmpty() || content == null || content.isEmpty()) {
+        if (boardDTO.getTitle() == null || boardDTO.getTitle().isEmpty() || boardDTO.getContent() == null || boardDTO.getContent().isEmpty()) {
             model.addAttribute("showModal", true); // 모달 표시
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
@@ -96,13 +96,11 @@ public class BoardController {
                 file.transferTo(destinationFile);
                 filePathString = filePath.toString();
                 Path finalFilePath = Paths.get(filePathString);
-                Long userId = currentUser.getId();
 
-                boardService.save(title, content, finalFilePath, userId);
+                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), finalFilePath, user.getId());
                 // 파일 저장 후 서비스에 저장 요청
             }
-            Long userId = currentUser.getId();
-            boardService.save(title, content, null, userId); //파일 없으면 null로 저장해
+            boardService.save(boardDTO.getTitle(), boardDTO.getContent(), null, user.getId());
             return "redirect:/home/board";
         }catch (IOException e) {
             e.printStackTrace();

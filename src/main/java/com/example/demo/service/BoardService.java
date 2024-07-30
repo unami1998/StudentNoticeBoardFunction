@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.BoardDTO;
 import com.example.demo.dto.BoardsearchDTO;
+import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.entity.Board;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.BoardRepository;
@@ -25,7 +26,10 @@ public class BoardService {
 
     public void save(String title, String content, Path filePath, Long userId) {
       //  Student user = new Student();
-
+        Student student = boardRepository.findUserById(userId);
+        if (student == null) {
+            throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다.");
+        }
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setTitle(title);
         boardDTO.setContent(content);
@@ -42,7 +46,7 @@ public class BoardService {
         board.setContent(boardDTO.getContent());
         board.setFilePath(boardDTO.getFilePath());
         board.setId(boardDTO.getId());
-   //     board.setStudent(student);
+        board.setStudent(student);
         boardRepository.save(board);
     }
 

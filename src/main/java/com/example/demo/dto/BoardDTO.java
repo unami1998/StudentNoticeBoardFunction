@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoardDTO {
+    private MyAccountInfoDTO user;
 
     private Long id;
     private String title;
