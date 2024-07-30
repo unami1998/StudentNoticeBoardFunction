@@ -101,27 +101,25 @@
         <td><input id="post_image" name="file" type="file" placeholder="사진파일"></td>
         <tr><td class="header">Comment</td></tr>
         <tr><td><textarea id ="content" placeholder="내용을 입력하세요" name="content"></textarea></td></tr>
+        <tr><td><input type="hidden" id="userId" name="userId" value="0"> <!-- 숨은 필드 추가 --></td></tr>
         <tr><td><input type="submit" value="등록"></td></tr>
     </table>
 </form>
 
 <script th:inline="javascript">
-    const modal = document.querySelector('.modal');
-    const modalClose = document.querySelector('.close_btn');
-    const boardForm = document.getElementById('boardForm');
-
-    modalClose.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
 
     document.addEventListener("DOMContentLoaded", function () {
-        var showModal = /*[[${showModal}]]*/ false;
-
-        if (showModal && modal) {
-            modal.style.display = 'block';
-        }
-
-        // 폼 제출 이벤트 핸들러 추가
+        // 서버에서 `userId` 값을 숨은 필드에 설정
+        var userId = /*[[${currentUser != null ? currentUser.id : 0}]]*/ 0;
+        document.getElementById('userId').value = userId;
+        const modal = document.querySelector('.modal');
+        const modalClose = document.querySelector('.close_btn');
+        const boardForm = document.getElementById('boardForm');
+        // 모달 닫기 버튼 클릭 이벤트 리스너
+        modalClose.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+        // 폼 제출 이벤트 리스너
         boardForm.addEventListener('submit', function (e) {
             e.preventDefault(); // 기본 폼 제출 동작 방지
 
@@ -129,26 +127,28 @@
             const content = document.getElementById('content').value;
 
             if (!title || !content) {
+                // 제목이나 내용이 없으면 모달을 띄우고 함수를 종료
                 modal.style.display = 'block';
                 return;
             }
-
-            const formData = new FormData(boardForm);
-            FormData.append('userId', userId);
+            const formData = new FormData(boardForm); // 폼 데이터를 FormData 객체로 변환
             fetch(boardForm.action, {
                 method: 'POST',
                 body: formData
-            }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        addFeed(title, content, data.file);
-                        boardForm.reset();
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        // 피드를 성공적으로 추가했을 때의 처리
+                        window.location.href = response.url;
                     } else {
-                        alert('Error posting your feed');
+                        // 피드 추가에 실패했을 때의 처리
+                        return response.text(); // 기타 응답 처리
                     }
                 });
         });
+
     });
+
     function addFeed(title, content, imageUrl) {
         const feedContainer = document.createElement('div');
         feedContainer.className = 'cLayer';

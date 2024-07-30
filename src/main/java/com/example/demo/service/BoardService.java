@@ -8,8 +8,6 @@ import com.example.demo.entity.Student;
 import com.example.demo.repository.BoardRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
@@ -24,30 +22,33 @@ public class BoardService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public void save(String title, String content, Path filePath, Long userId) {
+    public void save(String title, String content, String filePath, Long userId) {
       //  Student user = new Student();
-        Student student = boardRepository.findUserById(userId);
+        Student student = studentRepository.findUserById(userId);
         if (student == null) {
             throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다.");
         }
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setTitle(title);
         boardDTO.setContent(content);
-        boardDTO.setId(userId);
+        boardDTO.setId(boardDTO.getId());
 
         if(filePath !=null){
-            boardDTO.setFilePath(filePath.toString());
+            boardDTO.setFilePath(filePath);
         }else{
             boardDTO.setFilePath(null);
         }
 
         Board board = new Board();
-        board.setTitle(boardDTO.getTitle());
-        board.setContent(boardDTO.getContent());
-        board.setFilePath(boardDTO.getFilePath());
+        board.setTitle(title);
+        board.setContent(content);
+        board.setFilePath(filePath);
         board.setId(boardDTO.getId());
         board.setStudent(student);
         boardRepository.save(board);
+
+        System.out.println("게시글 저장 완료: " + board);
+
     }
 
     public List<BoardsearchDTO> searchInputString(String input) {
@@ -94,7 +95,6 @@ public class BoardService {
 //    }
 
     public List<BoardDTO> getAllBoards() {
-
         List<Board> boardList = boardRepository.findAll(); // 실제로 데이터베이스에서 게시물 목록을 가져옴
         List<BoardDTO> boardDTOList = new ArrayList<>();
         for (Board board : boardList) {
@@ -109,19 +109,21 @@ public class BoardService {
         return boardDTOList;
     }
 
+    public String tenMinitLover() {
+        return null;
+    }
+
     public void incrementFavorite(Long id) {
-        List<Board> boards = boardRepository.findByStudentId(id);
-        for(Board board : boards){
+        List<Board> boards = boardRepository.findByStudent_Id(id);
+        if (!boards.isEmpty()) {
+            Board board = boards.get(0); // 학생 ID로 찾은 첫 번째 게시글
             Student student = board.getStudent();
-            if(student != null){
-                student.setPointCount(student.getPointCount()+1);
+            System.out.print(board.getStudent().getId());
+            if (student != null) {
+                student.increaseGrade();
                 studentRepository.save(student);
             }
         }
-    }
-
-    public String tenMinitLover() {
-        return null;
     }
 
 

@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.dto.StudentDTO;
 import com.example.demo.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,11 +11,11 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<Student,Long> {
     List<Student> findByName(String name);
 
-    Student findById(StudentDTO id);
+    List<Student> findById(StudentDTO id);
 
     Student findByEmailAndPassword(String email, String password);
 
     Student findByEmail(String email);
 
-    MyAccountInfoDTO findUserById(Long userId);
+    Student findUserById(Long userId);
 }

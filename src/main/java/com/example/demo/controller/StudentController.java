@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.*;
 import com.example.demo.dto.Response.KakaoUserInfoResponse;
+import com.example.demo.entity.Board;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 import jakarta.mail.MessagingException;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -67,9 +69,9 @@ public class StudentController {
                                 Model model) {
         studentService.join(joinStudent);
         model.addAttribute("myName", joinStudent.getName());
+        String nickName = joinStudent.getName();
 
-
-        return "home"; // 로그인 성공 시 홈 페이지로 리다이렉트
+        return "redirect:/board/home?nick_name="+nickName; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 
     @GetMapping("/passwordFind")
@@ -87,5 +89,8 @@ public class StudentController {
 
         return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
+
+
+
 }
 

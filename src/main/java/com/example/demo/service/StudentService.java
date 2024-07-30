@@ -4,6 +4,7 @@ package com.example.demo.service;
 import com.example.demo.controller.MailService;
 import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.dto.StudentDTO;
+import com.example.demo.entity.Board;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
 import jakarta.mail.MessagingException;
@@ -28,11 +29,12 @@ public class StudentService {
     @Autowired
     MailService mailService;
 
-    public int join(StudentDTO joinStudent){
+    public Long join(StudentDTO joinStudent){
         validateDuplicateStudent(joinStudent.getName());  //이름이 중복
         Student student = new Student();
         student.setName(joinStudent.getName());
         student.setEmail(joinStudent.getEmail());
+        student.setNickName(joinStudent.getName());
         student.setPassword(joinStudent.getPassword());
         studentRepository.save(student); //이렇게 해도 추가가 된다
         return student.getId();
@@ -52,6 +54,7 @@ public class StudentService {
             return null;
         }
         MyAccountInfoDTO myAccountInfoDTO = new MyAccountInfoDTO();
+        myAccountInfoDTO.setId(student.getId());
         myAccountInfoDTO.setNickName(student.getNickName());
         myAccountInfoDTO.setEmail(student.getEmail());
 
@@ -98,7 +101,6 @@ public class StudentService {
             return null;
         }
     }
-
 
 
 }

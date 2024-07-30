@@ -13,7 +13,7 @@ import java.util.List;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
     private int age;
     private String name; //이름
     private String nickName;

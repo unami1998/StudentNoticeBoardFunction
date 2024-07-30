@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -31,17 +30,10 @@ public class BoardController {
 
     @Autowired
     private StudentController studentController;
-
     @PostMapping("/{id}/favorite")
     public ResponseEntity<String> incrementFavorite(@PathVariable Long id) {
         boardService.incrementFavorite(id);
         return ResponseEntity.ok("Favorite count incremented");
-    }
-
-    @GetMapping("/searchResults")
-    public ResponseEntity<List<BoardsearchDTO>> search(@RequestParam String input, Model model){
-        List<BoardsearchDTO> searchResults = boardService.searchInputString(input);
-        return ResponseEntity.ok(searchResults);
     }
 
     @GetMapping("/ten_minit_lover")
@@ -49,6 +41,15 @@ public class BoardController {
         String lover = boardService.tenMinitLover();
         return lover;
     }
+
+
+    @GetMapping("/searchResults")
+    public ResponseEntity<List<BoardsearchDTO>> search(@RequestParam String input, Model model){
+        List<BoardsearchDTO> searchResults = boardService.searchInputString(input);
+        return ResponseEntity.ok(searchResults);
+    }
+
+
 
     @GetMapping("/home")
     public String home(Model model){
@@ -58,7 +59,11 @@ public class BoardController {
     }
 
     @GetMapping("/writePage")
-    public String writeForm() {
+    public String writeForm(HttpSession session, Model model) {
+        MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        if(user != null){
+            model.addAttribute("user", user);
+        }
         return "writePage"; // login.html 템플릿 반환
     }
 
@@ -68,40 +73,40 @@ public class BoardController {
                                 HttpSession session,
                                 Model model) { // @RequestBody 제거
         MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
-        if (user == null || user.getId() ==0L) {
-            model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
-            return "index"; // 로그인 페이지로 리다이렉트
-        }
+
         if (boardDTO.getTitle() == null || boardDTO.getTitle().isEmpty() || boardDTO.getContent() == null || boardDTO.getContent().isEmpty()) {
             model.addAttribute("showModal", true); // 모달 표시
+            model.addAttribute("user", user);
+            System.out.print("여기냐??");
+
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
-
-        String filePathString = null;
+        if (user == null || user.getId() ==0L) {
+            model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
+            System.out.print("여기서 망함?");
+            return "writePage"; // 로그인 페이지로 리다이렉트
+        }
+        String filePathString  = null;
         try {
             if (!file.isEmpty()) { //파일이 있다
                 String uploadDir = "src/main/resources/static/uploads";
                 Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
-
-                // 정규화된 파일 이름 가져오기
                 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                // 파일 경로 설정
                 Path filePath = uploadPath.resolve(fileName);
                 File destinationFile = filePath.toFile();
-                // 디렉토리가 존재하지 않으면 생성
                 if (!destinationFile.getParentFile().exists()) {
                     destinationFile.getParentFile().mkdirs();
                 }
-                // 파일 저장
                 file.transferTo(destinationFile);
-                filePathString = filePath.toString();
-                Path finalFilePath = Paths.get(filePathString);
 
-                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), finalFilePath, user.getId());
+                filePathString = "/uploads/" + fileName;
+                boardDTO.setFilePath(filePathString);
+
+                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), boardDTO.getFilePath(), user.getId());
                 // 파일 저장 후 서비스에 저장 요청
             }
             boardService.save(boardDTO.getTitle(), boardDTO.getContent(), null, user.getId());
-            return "redirect:/home/board";
+            return "redirect:/board/home?nick_name=" + user.getNickName();
         }catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("showModal3", true);
