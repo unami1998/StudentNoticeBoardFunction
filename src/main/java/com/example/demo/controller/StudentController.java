@@ -26,16 +26,33 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @PostMapping("/changeMyInfo")
+    public ResponseEntity<String> changeMyInfo(HttpSession session, @RequestBody changeInfoRequestDTO changeInfo) {
+        MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        changeInfo.setId(user.getId());
+        studentService.changeMyInfo(changeInfo);
+        return ResponseEntity.ok("Info updated successfully");
+    }
+
+    @GetMapping("/myProfile")
+    public String myprofileForm(HttpSession session, Model model) {
+        //세션에서 현재 사용자 정보 가져오기
+        MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        if (user == null || user.getId() ==0L) {
+            model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
+            System.out.print("여기서 망함?");
+            return "home"; // 로그인 페이지로 리다이렉트
+        }
+        StudentDTO studentDTO = studentService.myInfo(user);
+        model.addAttribute("student", studentDTO);
+        return "myProfile";
+    }
+
     @GetMapping("/allStudent")
     public String allStudent(Model model) {
         List<StudentDTO> students = studentService.getAllMembers();
         model.addAttribute("students", students);
         return "allStudent";
-    }
-
-    @GetMapping("/myProfile")
-    public String myprofileForm() {
-        return "myProfile"; // login.html 템플릿 반환
     }
 
     @GetMapping("/loginPage")
@@ -89,8 +106,6 @@ public class StudentController {
 
         return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
-
-
 
 }
 

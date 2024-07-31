@@ -7,6 +7,10 @@ import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.service.BoardService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -28,18 +33,11 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    @Autowired
-    private StudentController studentController;
+
     @PostMapping("/{id}/favorite")
     public ResponseEntity<String> incrementFavorite(@PathVariable Long id) {
         boardService.incrementFavorite(id);
         return ResponseEntity.ok("Favorite count incremented");
-    }
-
-    @GetMapping("/ten_minit_lover")
-    public String lover(Model model){
-        String lover = boardService.tenMinitLover();
-        return lover;
     }
 
 
@@ -49,13 +47,18 @@ public class BoardController {
         return ResponseEntity.ok(searchResults);
     }
 
-
-
     @GetMapping("/home")
-    public String home(Model model){
+    public String home(HttpSession session, Model model){
         List<BoardDTO> boards  = boardService.getAllBoards();
         model.addAttribute("boards", boards);
-        return "home";
+
+        String topLoverTitle = boardService.getTopLover();
+        model.addAttribute("topLoverTitle", topLoverTitle);
+
+        MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        String nickName = user.getNickName();
+        //return "home";
+        return "redirect:/board/home?nick_name="+nickName;
     }
 
     @GetMapping("/writePage")
@@ -73,17 +76,16 @@ public class BoardController {
                                 HttpSession session,
                                 Model model) { // @RequestBody 제거
         MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
-
+        LocalDateTime time = LocalDateTime.now();
+        boardDTO.setCreateDate(time);
         if (boardDTO.getTitle() == null || boardDTO.getTitle().isEmpty() || boardDTO.getContent() == null || boardDTO.getContent().isEmpty()) {
             model.addAttribute("showModal", true); // 모달 표시
             model.addAttribute("user", user);
-            System.out.print("여기냐??");
 
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
         if (user == null || user.getId() ==0L) {
             model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
-            System.out.print("여기서 망함?");
             return "writePage"; // 로그인 페이지로 리다이렉트
         }
         String filePathString  = null;
@@ -102,10 +104,10 @@ public class BoardController {
                 filePathString = "/uploads/" + fileName;
                 boardDTO.setFilePath(filePathString);
 
-                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), boardDTO.getFilePath(), user.getId());
+                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), boardDTO.getFilePath(), user.getId(),boardDTO.getCreateDate());
                 // 파일 저장 후 서비스에 저장 요청
             }
-            boardService.save(boardDTO.getTitle(), boardDTO.getContent(), null, user.getId());
+            boardService.save(boardDTO.getTitle(), boardDTO.getContent(), null, user.getId(),boardDTO.getCreateDate());
             return "redirect:/board/home?nick_name=" + user.getNickName();
         }catch (IOException e) {
             e.printStackTrace();
@@ -115,25 +117,27 @@ public class BoardController {
     }
 
 
-//    // @PageableDefault(page = 1) : page는 기본으로 1페이지를 보여준다.
-//    @GetMapping("/paging")
-//    public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
-//        Page<BoardDTO> boardList = boardService.paging(pageable);
-//        int blockLimit = 5;
-//        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-//        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
-//
-//        // page 갯수 20개
-//        // 현재 사용자가 3페이지
-//        // 1 2 3
-//        // 현재 사용자가 7페이지
-//        // 7 8 9
-//        // 보여지는 페이지 갯수 3개
-//        // 총 페이지 갯수 8개
-//
-//        model.addAttribute("boardList", boardList);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-//        return "paging";
-//    }
+    // @PageableDefault(page = 1) : page는 기본으로 1페이지를 보여준다.
+    @GetMapping("/paging")
+    public String paging(@PageableDefault(page = 0, size = 7) Pageable pageable, Model model) {
+        Page<BoardDTO> boardList = boardService.paging(pageable);
+        int blockLimit = 5;
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+
+        // page 갯수 20개
+        // 현재 사용자가 3페이지
+        // 1 2 3
+        // 현재 사용자가 7페이지
+        // 7 8 9
+        // 보여지는 페이지 갯수 3개
+        // 총 페이지 갯수 8개
+
+        model.addAttribute("boardList", boardList.getContent());
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("currentPage", pageable.getPageNumber() + 1);
+        model.addAttribute("totalPages", boardList.getTotalPages());
+        return "home";
+    }
 }

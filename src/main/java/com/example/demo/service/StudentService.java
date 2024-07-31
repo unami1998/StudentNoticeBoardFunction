@@ -4,7 +4,7 @@ package com.example.demo.service;
 import com.example.demo.controller.MailService;
 import com.example.demo.dto.MyAccountInfoDTO;
 import com.example.demo.dto.StudentDTO;
-import com.example.demo.entity.Board;
+import com.example.demo.dto.changeInfoRequestDTO;
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
 import jakarta.mail.MessagingException;
@@ -85,15 +85,21 @@ public class StudentService {
         return studentDTOS;
     }
 
-    public StudentDTO myInfo(Long id) {
+    public StudentDTO myInfo(MyAccountInfoDTO myAccountInfo) {
+        if (myAccountInfo == null) {
+            System.out.print("user 없음");
+        }
+        Long id = myAccountInfo.getId();
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if(optionalStudent.isPresent()){ //그 해당 아이디가 있다면
             Student student=optionalStudent.get();
             StudentDTO studentDTO = new StudentDTO();
-            //studentDTO.setId(student.getId());
             studentDTO.setName(student.getName());
-
-         //   studentDTO.setAge(student.getAge());
+            studentDTO.setNickName(student.getNickName());
+            studentDTO.setAddress(student.getAddress());
+            studentDTO.setAge(student.getAge());
+            studentDTO.setGrade(String.valueOf(student.getGrade()));
+            studentDTO.setPointCount(student.getPointCount());
 
             return studentDTO;
         } else {
@@ -102,5 +108,24 @@ public class StudentService {
         }
     }
 
-
+    public void changeMyInfo(changeInfoRequestDTO changeInfo) {
+        Student student = studentRepository.findUserById(changeInfo.getId());
+        if (student != null) {
+            if (changeInfo.getName() != null) {
+                student.setName(changeInfo.getName());
+            }
+            if (changeInfo.getNickName() != null) {
+                student.setNickName(changeInfo.getNickName());
+            }
+            if (changeInfo.getAddress() != null) {
+                student.setAddress(changeInfo.getAddress());
+            }
+            if (changeInfo.getAge() != null) {
+                student.setAge(changeInfo.getAge());
+            }
+            studentRepository.save(student);
+        }else{
+            System.out.print("야 유저 없는데?");
+        }
+    }
 }
