@@ -90,7 +90,7 @@ public class StudentController {
         model.addAttribute("myName", joinStudent.getName());
         String nickName = joinStudent.getName();
 
-        return "redirect:/board/home?nick_name="+nickName; // 로그인 성공 시 홈 페이지로 리다이렉트
+        return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
 
     @GetMapping("/passwordFind")

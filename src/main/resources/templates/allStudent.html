@@ -77,7 +77,6 @@
     </style>
 </head>
 
-<body>
 <body style="background-color: #fafafa; width: 100%;">
 <!--상단 네비게이션바---------------------------------------------------------------------------------------------------->
 
@@ -105,12 +104,14 @@
         <tr>
             <th>ID</th>
             <th>이름</th>
+            <th>레벨</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="studentDto : ${students}">
             <td th:text="${studentDto.name}"></td>
             <td th:text="${studentDto.email}"></td>
+            <td th:text="${studentDto.grade}"></td>
         </tr>
         </tbody>
     </table>

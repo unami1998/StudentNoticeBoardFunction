@@ -137,7 +137,7 @@ public class BoardService {
             return "No top lover found";
         }
         String title = checkTitle.getTitle();
-        System.out.println("현재 title: " + title);
+        System.out.println("현재 title-> " + title);
         return title;
     }
 

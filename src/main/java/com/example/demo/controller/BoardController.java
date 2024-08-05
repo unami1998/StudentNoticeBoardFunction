@@ -37,7 +37,7 @@ public class BoardController {
     @PostMapping("/{id}/favorite")
     public ResponseEntity<String> incrementFavorite(@PathVariable Long id) {
         boardService.incrementFavorite(id);
-        return ResponseEntity.ok("Favorite count incremented");
+        return ResponseEntity.ok("좋아요를 눌렀습니다.");
     }
 
 
@@ -100,7 +100,7 @@ public class BoardController {
         String filePathString = null;
 
         if (!file.isEmpty()) { //파일이 있다
-            String uploadDir = "src/main/resources/static/uploads";
+            String uploadDir = "/var/www/uploads";
             Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             Path filePath = uploadPath.resolve(fileName);
