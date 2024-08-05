@@ -121,7 +121,7 @@
         <tr>
             <th>내 이름</th>
             <th>내 닉네임</th>
-            <th>내 주소</th>
+            <th>내 비밀번호</th>
             <th>내 나이</th>
             <th>내 학급</th>
             <th>현재 내 포인트</th>
@@ -140,9 +140,9 @@
                       th:onclick="'changeInfo(' + ${student.id} + ', \'nickName\')'">favorite_border</span>
             </td>
             <td>
-                <span th:text="${student.address}"></span>
+                <span th:text="${student.password}"></span>
                 <span style="margin: 0 12px; cursor: pointer;" class="material-icons-outlined"
-                      th:onclick="'changeInfo(' + ${student.id} + ', \'address\')'">favorite_border</span>
+                      th:onclick="'changeInfo(' + ${student.id} + ', \'password\')'">favorite_border</span>
             </td>
             <td>
                 <span th:text="${student.age}"></span>

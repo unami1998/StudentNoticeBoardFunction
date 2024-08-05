@@ -42,29 +42,38 @@ public class BoardController {
 
 
     @GetMapping("/searchResults")
-    public ResponseEntity<List<BoardsearchDTO>> search(@RequestParam String input, Model model){
+    public ResponseEntity<List<BoardsearchDTO>> search(@RequestParam String input, Model model) {
         List<BoardsearchDTO> searchResults = boardService.searchInputString(input);
         return ResponseEntity.ok(searchResults);
     }
 
     @GetMapping("/home")
-    public String home(HttpSession session, Model model){
-        List<BoardDTO> boards  = boardService.getAllBoards();
+    public String home(HttpSession session, Model model) {
+        List<BoardDTO> boards = boardService.getAllBoards();
         model.addAttribute("boards", boards);
 
         String topLoverTitle = boardService.getTopLover();
         model.addAttribute("topLoverTitle", topLoverTitle);
 
         MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
+        if (user == null) {
+            // user가 null인 경우 로그인 페이지로 리디렉션하거나 적절한 처리를 합니다.
+            return "index";  // 로그인 페이지로 리디렉션 예시
+        }
         String nickName = user.getNickName();
-        //return "home";
-        return "redirect:/board/home?nick_name="+nickName;
+        if (session.getAttribute("redirected") == null) {
+            session.setAttribute("redirected", true);
+            return "redirect:/board/home?nick_name=" + nickName;
+        }
+        session.removeAttribute("redirected");
+
+        return "home";
     }
 
     @GetMapping("/writePage")
     public String writeForm(HttpSession session, Model model) {
         MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
-        if(user != null){
+        if (user != null) {
             model.addAttribute("user", user);
         }
         return "writePage"; // login.html 템플릿 반환
@@ -74,7 +83,7 @@ public class BoardController {
     public String boardWritePro(@ModelAttribute BoardDTO boardDTO,
                                 @RequestParam("file") MultipartFile file,
                                 HttpSession session,
-                                Model model) { // @RequestBody 제거
+                                Model model) throws IOException { // @RequestBody 제거
         MyAccountInfoDTO user = (MyAccountInfoDTO) session.getAttribute("currentUser");
         LocalDateTime time = LocalDateTime.now();
         boardDTO.setCreateDate(time);
@@ -84,60 +93,56 @@ public class BoardController {
 
             return "writePage"; // 입력 페이지로 다시 돌아감
         }
-        if (user == null || user.getId() ==0L) {
+        if (user == null || user.getId() == 0L) {
             model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
             return "writePage"; // 로그인 페이지로 리다이렉트
         }
-        String filePathString  = null;
-        try {
-            if (!file.isEmpty()) { //파일이 있다
-                String uploadDir = "src/main/resources/static/uploads";
-                Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                Path filePath = uploadPath.resolve(fileName);
-                File destinationFile = filePath.toFile();
-                if (!destinationFile.getParentFile().exists()) {
-                    destinationFile.getParentFile().mkdirs();
-                }
-                file.transferTo(destinationFile);
+        String filePathString = null;
 
-                filePathString = "/uploads/" + fileName;
-                boardDTO.setFilePath(filePathString);
-
-                boardService.save(boardDTO.getTitle(), boardDTO.getContent(), boardDTO.getFilePath(), user.getId(),boardDTO.getCreateDate());
-                // 파일 저장 후 서비스에 저장 요청
+        if (!file.isEmpty()) { //파일이 있다
+            String uploadDir = "src/main/resources/static/uploads";
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            Path filePath = uploadPath.resolve(fileName);
+            File destinationFile = filePath.toFile();
+            if (!destinationFile.getParentFile().exists()) {
+                destinationFile.getParentFile().mkdirs();
             }
-            boardService.save(boardDTO.getTitle(), boardDTO.getContent(), null, user.getId(),boardDTO.getCreateDate());
-            return "redirect:/board/home?nick_name=" + user.getNickName();
-        }catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("showModal3", true);
-            return "writePage";
+            file.transferTo(destinationFile);
+
+            filePathString = "/uploads/" + fileName;
+            boardDTO.setFilePath(filePathString);
+
+        }else{
+            boardDTO.setFilePath(null);
         }
-    }
-
-
-    // @PageableDefault(page = 1) : page는 기본으로 1페이지를 보여준다.
-    @GetMapping("/paging")
-    public String paging(@PageableDefault(page = 0, size = 7) Pageable pageable, Model model) {
-        Page<BoardDTO> boardList = boardService.paging(pageable);
-        int blockLimit = 5;
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
-        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
-
-        // page 갯수 20개
-        // 현재 사용자가 3페이지
-        // 1 2 3
-        // 현재 사용자가 7페이지
-        // 7 8 9
-        // 보여지는 페이지 갯수 3개
-        // 총 페이지 갯수 8개
-
-        model.addAttribute("boardList", boardList.getContent());
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("currentPage", pageable.getPageNumber() + 1);
-        model.addAttribute("totalPages", boardList.getTotalPages());
-        return "home";
+        boardService.save(boardDTO.getTitle(), boardDTO.getContent(), filePathString, user.getId(), boardDTO.getCreateDate());
+        return "redirect:/board/home?nick_name=" + user.getNickName();
     }
 }
+
+
+// @PageableDefault(page = 1) : page는 기본으로 1페이지를 보여준다.
+//    @GetMapping("/paging")
+//    public String paging(@PageableDefault(page = 0, size = 7) Pageable pageable, Model model) {
+//        Page<BoardDTO> boardList = boardService.paging(pageable);
+//        int blockLimit = 5;
+//        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; // 1 4 7 10 ~~
+//        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages();
+//
+//        // page 갯수 20개
+//        // 현재 사용자가 3페이지
+//        // 1 2 3
+//        // 현재 사용자가 7페이지
+//        // 7 8 9
+//        // 보여지는 페이지 갯수 3개
+//        // 총 페이지 갯수 8개
+//
+//        model.addAttribute("boardList", boardList.getContent());
+//        model.addAttribute("startPage", startPage);
+//        model.addAttribute("endPage", endPage);
+//        model.addAttribute("currentPage", pageable.getPageNumber() + 1);
+//        model.addAttribute("totalPages", boardList.getTotalPages());
+//        return "home";
+//    }
+

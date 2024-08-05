@@ -83,8 +83,10 @@ public class StudentController {
 
     @PostMapping("/createStudent")
     public String createStudent(StudentDTO joinStudent,
+                                HttpSession session,
                                 Model model) {
-        studentService.join(joinStudent);
+        MyAccountInfoDTO newUser = studentService.join(joinStudent);
+        session.setAttribute("currentUser", newUser);
         model.addAttribute("myName", joinStudent.getName());
         String nickName = joinStudent.getName();
 

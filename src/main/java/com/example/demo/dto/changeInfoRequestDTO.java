@@ -9,7 +9,7 @@ public class changeInfoRequestDTO {
     private Long id;
     private String name;
     private String nickName;
-    private String address;
+    private String password;
     private Integer age;
     private String grade;
     private int pointCount;

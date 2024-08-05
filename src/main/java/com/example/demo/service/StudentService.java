@@ -29,7 +29,7 @@ public class StudentService {
     @Autowired
     MailService mailService;
 
-    public Long join(StudentDTO joinStudent){
+    public MyAccountInfoDTO join(StudentDTO joinStudent){
         validateDuplicateStudent(joinStudent.getName());  //이름이 중복
         Student student = new Student();
         student.setName(joinStudent.getName());
@@ -37,7 +37,13 @@ public class StudentService {
         student.setNickName(joinStudent.getName());
         student.setPassword(joinStudent.getPassword());
         studentRepository.save(student); //이렇게 해도 추가가 된다
-        return student.getId();
+
+        MyAccountInfoDTO newUser = new MyAccountInfoDTO();
+        newUser.setName(student.getName());
+        newUser.setEmail(student.getEmail());
+        newUser.setNickName(student.getNickName());
+
+        return newUser;
     }
     public void validateDuplicateStudent(String studentName) {
         List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
@@ -96,7 +102,7 @@ public class StudentService {
             StudentDTO studentDTO = new StudentDTO();
             studentDTO.setName(student.getName());
             studentDTO.setNickName(student.getNickName());
-            studentDTO.setAddress(student.getAddress());
+            studentDTO.setPassword(student.getPassword());
             studentDTO.setAge(student.getAge());
             studentDTO.setGrade(String.valueOf(student.getGrade()));
             studentDTO.setPointCount(student.getPointCount());
@@ -117,8 +123,8 @@ public class StudentService {
             if (changeInfo.getNickName() != null) {
                 student.setNickName(changeInfo.getNickName());
             }
-            if (changeInfo.getAddress() != null) {
-                student.setAddress(changeInfo.getAddress());
+            if (changeInfo.getPassword() != null) {
+                student.setAddress(changeInfo.getPassword());
             }
             if (changeInfo.getAge() != null) {
                 student.setAge(changeInfo.getAge());

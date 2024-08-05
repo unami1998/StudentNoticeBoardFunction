@@ -110,7 +110,7 @@ public class BoardService {
             boardDTO.setFilePath(board.getFilePath());
             boardDTOList.add(boardDTO);
         }
-        System.out.println("test all " + boardRepository.findAll());
+        System.out.println("test all " + boardDTOList);
         return boardDTOList;
     }
     public void incrementFavorite(Long id) {
@@ -129,8 +129,13 @@ public class BoardService {
     }
 
     public String getTopLover() {
-
         Board checkTitle = boardRepository.findTopByOrderByPointLoveDesc();
+
+        if (checkTitle == null || checkTitle.getPointLove() == 0) {
+            // 게시물이 없거나, 게시물의 포인트가 0일 경우
+            System.out.println("현재 가장 높은 포인트의 게시물이 없거나 포인트가 0입니다.");
+            return "No top lover found";
+        }
         String title = checkTitle.getTitle();
         System.out.println("현재 title: " + title);
         return title;
@@ -138,25 +143,25 @@ public class BoardService {
 
 
 
-    public Page<BoardDTO> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1; // page 위치에 있는 값은 0부터 시작한다.
-        // int page = pageable.getPageNumber();
-        int pageLimit = 10; // 한페이지에 보여줄 글 개수
-
-        // 한 페이지당 3개식 글을 보여주고 정렬 기준은 ID기준으로 내림차순
-        Page<Board> postsPages = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
-
-        //postsPages.getContent();
-        //postsPages.getTotalPages();
-
-        // 목록 : id, title, content, author
-        Page<BoardDTO> boardDTOS = postsPages.map(
-                board -> {
-                    return new BoardDTO(board.getId(), board.getTitle(), board.getContent(), board.getFilePath(), board.getCreateDate());
-                });
-
-        return boardDTOS;
-    }
+//    public Page<BoardDTO> paging(Pageable pageable) {
+//        int page = pageable.getPageNumber() - 1; // page 위치에 있는 값은 0부터 시작한다.
+//        // int page = pageable.getPageNumber();
+//        int pageLimit = 10; // 한페이지에 보여줄 글 개수
+//
+//        // 한 페이지당 3개식 글을 보여주고 정렬 기준은 ID기준으로 내림차순
+//        Page<Board> postsPages = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+//
+//        //postsPages.getContent();
+//        //postsPages.getTotalPages();
+//
+//        // 목록 : id, title, content, author
+//        Page<BoardDTO> boardDTOS = postsPages.map(
+//                board -> {
+//                    return new BoardDTO(board.getId(), board.getTitle(), board.getContent(), board.getFilePath(), board.getCreateDate());
+//                });
+//
+//        return boardDTOS;
+//    }
 
 
 }

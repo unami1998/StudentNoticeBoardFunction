@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class MyAccountInfoDTO implements StudentAccount {
     private Long id;
+    private String name;
     private String nickName;
     private String email;
 
