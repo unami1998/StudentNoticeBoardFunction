@@ -354,7 +354,7 @@
             <td th:text="${boardDto.title}"></td>
             <td th:text="${boardDto.content}"></td>
             <td>
-                <img th:src="@{${boardDto.filePath}}" style="max-width: 100px; max-height: 100px;" />
+                <img th:src="@{/var/www/uploads/{file}(file=${boardDto.filePath})}" style="max-width: 100px; max-height: 100px;" />
             </td>
             <td>
                 <span style="margin: 0 12px 0 12px; cursor: pointer;"

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -97,26 +98,27 @@ public class BoardController {
             model.addAttribute("error", "로그인 정보가 유효하지 않습니다.");
             return "writePage"; // 로그인 페이지로 리다이렉트
         }
-        String filePathString = null;
+ //       String filePathString = null;
 
-        if (!file.isEmpty()) { //파일이 있다
-            String uploadDir = "/var/www/uploads";
-            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        if (!file.isEmpty()) { // 파일이 있는 경우
+            String UPLOAD_DIR = "src/main/resources/static/uploads/";
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            Path filePath = uploadPath.resolve(fileName);
-            File destinationFile = filePath.toFile();
-            if (!destinationFile.getParentFile().exists()) {
-                destinationFile.getParentFile().mkdirs();
+            Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath); // 디렉토리가 존재하지 않으면 생성
             }
-            file.transferTo(destinationFile);
 
-            filePathString = "/uploads/" + fileName;
-            boardDTO.setFilePath(filePathString);
+            Path filePath = uploadPath.resolve(fileName);
+            byte[] bytes = file.getBytes();
+            Files.write(filePath, bytes);
+            String webPath = "/uploads/" + fileName;
 
-        }else{
+            boardDTO.setFilePath(webPath);
+        } else {
             boardDTO.setFilePath(null);
         }
-        boardService.save(boardDTO.getTitle(), boardDTO.getContent(), filePathString, user.getId(), boardDTO.getCreateDate());
+        boardService.save(boardDTO.getTitle(), boardDTO.getContent(), boardDTO.getFilePath(), user.getId(), boardDTO.getCreateDate());
         return "redirect:/board/home?nick_name=" + user.getNickName();
     }
 }
