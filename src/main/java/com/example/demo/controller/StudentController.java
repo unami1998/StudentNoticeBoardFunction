@@ -69,7 +69,6 @@ public class StudentController {
         MyAccountInfoDTO loginResult = studentService.login(email, password);
         if (loginResult == null || loginResult.getNickName().trim().isEmpty()) {
             System.out.println("로그인 실패");
-            model.addAttribute("showModal", true);
             return "index"; // 로그인 페이지로 다시 돌아감
         }
         session.setAttribute("currentUser", loginResult);
