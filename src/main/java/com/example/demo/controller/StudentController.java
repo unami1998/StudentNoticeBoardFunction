@@ -1,15 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
-import com.example.demo.dto.Response.KakaoUserInfoResponse;
-import com.example.demo.entity.Board;
-import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
