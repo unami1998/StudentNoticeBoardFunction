@@ -96,7 +96,7 @@ public class BoardController {
  //       String filePathString = null;
 
         if (!file.isEmpty()) { // 파일이 있는 경우
-            String UPLOAD_DIR = "/var/www/uploads/";
+            String UPLOAD_DIR = "src/main/resources/static/uploads/";
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
 
