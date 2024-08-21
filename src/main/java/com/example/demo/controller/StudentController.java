@@ -79,10 +79,13 @@ public class StudentController {
     public String createStudent(StudentDTO joinStudent,
                                 HttpSession session,
                                 Model model) {
+        if(studentService.validateDuplicateStudent(joinStudent.getName())){
+            model.addAttribute("error","이미 존재하는 이름입니다.");
+        }
         MyAccountInfoDTO newUser = studentService.join(joinStudent);
+
         session.setAttribute("currentUser", newUser);
         model.addAttribute("myName", joinStudent.getName());
-        String nickName = joinStudent.getName();
 
         return "index"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }

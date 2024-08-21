@@ -30,7 +30,9 @@ public class StudentService {
     MailService mailService;
 
     public MyAccountInfoDTO join(StudentDTO joinStudent){
-        validateDuplicateStudent(joinStudent.getName());  //이름이 중복
+//        if(validateDuplicateStudent(joinStudent.getName())){//이름이 중복
+//            throw new IllegalStateException()
+//        }
         Student student = new Student();
         student.setName(joinStudent.getName());
         student.setEmail(joinStudent.getEmail());
@@ -45,11 +47,9 @@ public class StudentService {
 
         return newUser;
     }
-    public void validateDuplicateStudent(String studentName) {
+    public boolean validateDuplicateStudent(String studentName) {
         List<Student> existStudent = studentRepository.findByName(studentName);  //이름으로 중복찾기
-        if(!existStudent.isEmpty()){ //중복된 이름 empty가 아니라면 이미 누군가 그 이름을 쓴다는거니깐
-            throw new DuplicateFormatFlagsException("이미 존재하는 이름");
-        }
+        return !existStudent.isEmpty(); // 중복된 이름이 존재하는지 여부를 반환
     }
     public MyAccountInfoDTO login(String email, String password) {
         Student student = studentRepository.findByEmailAndPassword(email,password);
